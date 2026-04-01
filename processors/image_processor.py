@@ -67,16 +67,18 @@ class ImageProcessor(BaseProcessor):
         """
         mask_regions = []
 
-        # 1. 对每个 OCR 结果做正则扫描
+        # 1. 对每个 OCR 结果做正则扫描（仅对自身就是值的情况涂黑本身）
         for ocr_item in ocr_results:
             matches = self.scanner.scan_text(ocr_item.text)
-            if matches:
+            # 过滤掉 keyword，不遮罩“钥匙”标签自身
+            valid_matches = [m for m in matches if m.match_type != 'keyword']
+            if valid_matches:
                 # 整个文本框区域都需要遮罩
                 mask_regions.append((
                     ocr_item.x_min, ocr_item.y_min,
                     ocr_item.x_max, ocr_item.y_max
                 ))
-                for m in matches:
+                for m in valid_matches:
                     self._add_log_entry(
                         log, m.rule_id, m.rule_name,
                         m.matched_text,
@@ -158,20 +160,45 @@ class ImageProcessor(BaseProcessor):
         best_below = best(below_candidates)
 
         # 决策：右侧分数 >= 0.5 优先选右侧，否则选下方（如果下方分数更高）
+        best_candidate = None
         if best_right is not None:
             right_score = right_candidates[0][1] if right_candidates else 0
             below_score = below_candidates[0][1] if below_candidates else 0
             # 右侧有高置信度数字，或右侧比下方分更高/相当 → 选右侧
             if right_score >= 0.5 or right_score >= below_score:
-                return [best_right]
+                best_candidate = best_right
             elif best_below is not None:
-                return [best_below]
+                best_candidate = best_below
             else:
-                return [best_right]
+                best_candidate = best_right
         elif best_below is not None:
-            return [best_below]
+            best_candidate = best_below
+
+        if best_candidate is not None:
+            # 防御性校验
+            score = self._score_as_account(best_candidate.text)
+            # 1. 得分太低（纯文本）直接丢弃
+            if score < 0.3:
+                return []
+            # 2. 如果候选框自己就是个其他的系统 Label，丢弃
+            if self._is_label(best_candidate.text):
+                return []
+            return [best_candidate]
 
         return []
+
+    def _is_label(self, text: str) -> bool:
+        """检查文本本身是否是系统里配置的一个规则标签(Key)"""
+        text_lower = text.strip().lower()
+        if not text_lower:
+            return False
+        for _, _, labels, _ in self.scanner.keywords:
+            for lbl in labels:
+                lbl_lower = lbl.strip().lower()
+                # 简单包含判断或被包含判断，防止长短标签相互覆盖
+                if lbl_lower in text_lower or text_lower in lbl_lower:
+                    return True
+        return False
 
     @staticmethod
     def _score_as_account(text: str) -> float:

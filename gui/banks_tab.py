@@ -107,12 +107,32 @@ class BanksTab(ttk.Frame):
             values = self.tree.item(item, 'values')
             bid = values[0]
             old = old_banks.get(bid, {})
+            
+            # 如果是全新银行（没有历史配置记录），则自动注入默认的关键字标签加速启动
+            extra_keywords = old.get('extra_keywords')
+            if extra_keywords is None:
+                extra_keywords = [
+                    {
+                        "id": "tpl_account_num",
+                        "name": "账号(模板)",
+                        "labels": ["Account Number", "Account No", "Account", "Account:"],
+                        "action": "redact_value",
+                        "enabled": True
+                    },
+                    {
+                        "id": "tpl_iban",
+                        "name": "IBAN(模板)",
+                        "labels": ["IBAN", "IBAN:"],
+                        "action": "redact_value",
+                        "enabled": True
+                    }
+                ]
+
             new_banks.append({
                 'id': bid,
                 'name': values[1],
                 'enabled': values[2] == '✓',
-                'extra_keywords': old.get('extra_keywords', []),
-                'extra_patterns': old.get('extra_patterns', []),
+                'extra_keywords': extra_keywords,
                 'disabled_global_rules': old.get('disabled_global_rules', []),
             })
 

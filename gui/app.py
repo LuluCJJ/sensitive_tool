@@ -54,24 +54,24 @@ class MainApp:
         self._notebook = ttk.Notebook(self.root, padding=5)
         self._notebook.pack(fill=BOTH, expand=True, padx=10, pady=10)
 
-        # 文件处理标签页
-        self.file_tab = FileTab(self._notebook, self.redactor)
-        self._notebook.add(self.file_tab, text=t('tab_file'))
-
-        # 规则配置标签页
-        self.rules_tab = RulesTab(self._notebook, self.redactor)
-        self._notebook.add(self.rules_tab, text=t('tab_rules'))
-
-        # 脱敏日志标签页
-        self.log_tab = LogTab(self._notebook, self.redactor)
-        self._notebook.add(self.log_tab, text=t('tab_log'))
-
-        # 银行配置标签页
+        # 银行配置标签页 (Index 0)
         self.banks_tab = BanksTab(
             self._notebook, self.redactor,
             on_banks_changed=self._on_banks_changed,
         )
         self._notebook.add(self.banks_tab, text=t('tab_banks'))
+
+        # 规则配置标签页 (Index 1)
+        self.rules_tab = RulesTab(self._notebook, self.redactor)
+        self._notebook.add(self.rules_tab, text=t('tab_rules'))
+
+        # 文件处理标签页 (Index 2)
+        self.file_tab = FileTab(self._notebook, self.redactor)
+        self._notebook.add(self.file_tab, text=t('tab_file'))
+
+        # 脱敏日志标签页 (Index 3)
+        self.log_tab = LogTab(self._notebook, self.redactor)
+        self._notebook.add(self.log_tab, text=t('tab_log'))
 
         # 切换到日志标签页时自动刷新
         self._notebook.bind('<<NotebookTabChanged>>', self._on_tab_changed)
@@ -79,7 +79,7 @@ class MainApp:
     def _on_tab_changed(self, event):
         """标签页切换回调"""
         current = self._notebook.index(self._notebook.select())
-        if current == 2:  # 日志标签页
+        if current == 3:  # 日志标签页移到了最后的 index 3
             self.log_tab.on_tab_selected()
 
     def _on_banks_changed(self):
@@ -102,10 +102,10 @@ class MainApp:
         self._lang_btn.config(text=t('lang_btn'))
 
         # 刷新 Tab 标题
-        self._notebook.tab(0, text=t('tab_file'))
+        self._notebook.tab(0, text=t('tab_banks'))
         self._notebook.tab(1, text=t('tab_rules'))
-        self._notebook.tab(2, text=t('tab_log'))
-        self._notebook.tab(3, text=t('tab_banks'))
+        self._notebook.tab(2, text=t('tab_file'))
+        self._notebook.tab(3, text=t('tab_log'))
 
         # 刷新各 Tab 内容
         for tab in [self.file_tab, self.rules_tab, self.log_tab, self.banks_tab]:

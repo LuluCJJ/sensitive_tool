@@ -65,12 +65,15 @@ class Scanner:
         self.replacement = rules.get('replacement', '****')
         self.use_whitelist_mode = rules.get('use_whitelist_mode', False)
 
-        # 加载账号白名单
-        self.account_whitelist = [
-            (item['value'], item.get('note', ''))
-            for item in rules.get('account_whitelist', [])
-            if item.get('enabled', True) and item.get('value', '').strip()
-        ]
+        # 加载账号白名单 （提取 value, note, is_regex）
+        self.account_whitelist = []
+        for item in rules.get('account_whitelist', []):
+            if item.get('enabled', True) and item.get('value', '').strip():
+                self.account_whitelist.append({
+                    'value': item['value'],
+                    'note': item.get('note', ''),
+                    'is_regex': item.get('is_regex', False)
+                })
 
         # 确定基础规则櫻
         base_patterns = rules.get('patterns', []) if not self.use_whitelist_mode else []
@@ -125,22 +128,42 @@ class Scanner:
         matches = []
 
         if self.use_whitelist_mode:
-            # ---- 白名单精确匹配模式 ----
-            for value, note in self.account_whitelist:
-                start = 0
-                while True:
-                    idx = text.find(value, start)
-                    if idx == -1:
-                        break
-                    matches.append(ScanMatch(
-                        rule_id='whitelist',
-                        rule_name=f'账号白名单({note})' if note else '账号白名单',
-                        matched_text=value,
-                        start=idx,
-                        end=idx + len(value),
-                        match_type='whitelist',
-                    ))
-                    start = idx + len(value)
+            # ---- 精确账号或正则模式 ----
+            for acc in self.account_whitelist:
+                value = acc['value']
+                note = acc['note']
+                is_regex = acc['is_regex']
+                rule_name = f'账号规则({note})' if note else '账号规则'
+                
+                if is_regex:
+                    try:
+                        pattern = re.compile(value)
+                        for m in pattern.finditer(text):
+                            matches.append(ScanMatch(
+                                rule_id='whitelist_regex',
+                                rule_name=rule_name,
+                                matched_text=m.group(),
+                                start=m.start(),
+                                end=m.end(),
+                                match_type='whitelist',
+                            ))
+                    except re.error:
+                        pass
+                else:
+                    start = 0
+                    while True:
+                        idx = text.find(value, start)
+                        if idx == -1:
+                            break
+                        matches.append(ScanMatch(
+                            rule_id='whitelist_exact',
+                            rule_name=rule_name,
+                            matched_text=value,
+                            start=idx,
+                            end=idx + len(value),
+                            match_type='whitelist',
+                        ))
+                        start = idx + len(value)
         else:
             # ---- 正则模式扫描 ----
             for rule_id, rule_name, pattern in self.patterns:
