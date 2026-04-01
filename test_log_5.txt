@@ -1,0 +1,1218 @@
+﻿d:\AI\project\sensiti
+ve\.venv_new\Scripts\
+python.exe : [33mChe
+cking connectivity to
+ the model hosters, t
+his may take a while.
+ To bypass this check
+, set `PADDLE_PDX_DIS
+ABLE_MODEL_SOURCE_CHE
+CK` to `True`.[0m
+所在位置 行:1 字符: 1
++ d:\AI\project\sensi
+tive\.venv_new\Script
+s\python.exe test_int
+egration ...
++ ~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~
+    + CategoryInfo   
+           : NotSpe  
+  cified: ([33mCh   
+ ecking c... to `    
+True`.[0m:Strin    g
+) [], RemoteExc    ep
+tion
+    + FullyQualified 
+   ErrorId : Native  
+  CommandError
+ 
+信息: 用提供的模式无法找到文件。
+D:\AI\project\sensiti
+ve\.venv_new\lib\site
+-packages\paddle\util
+s\cpp_extension\exten
+sion_utils.py:712: Us
+erWarning: No ccache 
+found. Please be awar
+e that recompiling al
+l source files may be
+ required. You can do
+wnload and install cc
+ache from: https://gi
+thub.com/ccache/ccach
+e/blob/master/doc/INS
+TALL.md
+  warnings.warn(warni
+ng_message)
+[32mCreating model: 
+('PP-LCNet_x1_0_doc_o
+ri', None)[0m
+[32mUsing official m
+odel (PP-LCNet_x1_0_d
+oc_ori), the model fi
+les will be automatic
+ally downloaded and s
+aved in `C:\Users\615
+88\.paddlex\official_
+models\PP-LCNet_x1_0_
+doc_ori`.[0m
+[2026-03-26 18:55:57,
+340] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/model
+s/PaddlePaddle/PP-LCN
+et_x1_0_doc_ori/revis
+ion/main "HTTP/1.1 20
+0 OK"
+开始集成功能测试...
+测试处理 Word, Excel, 图片和 PDF...
+[0/4] 处理第 1/4 个文件
+成功: sample_bank_receipt.docx -> D:\AI\project\sensitive\output\sample_bank_receipt_redacted.docx (脱敏处: 9)
+  - [IBAN账号] 'HD202403260001' @ 表格1 第1行第2列
+  - [付款方户名] '张三丰' @ 表格1 第2行第2列
+  - [付款方账号] '6222021234567890123' @ 表格1 第2行第4列
+  - [银行账号] '6222021234567890123' @ 表格1 第2行第4列
+  - [付款方户名] '工商银行北京分行营业部' @ 表格1 第3行第2列
+  - [付款方开户行] '工商银行北京分行营业部' @ 表格1 第3行第2列
+  - [付款方户名] '开户行' @ 表格1 第3行第1列
+  - [银行账号] '6217001234567891234' @ 表格1 第4行第4列
+  - [手机号码] '13812345678' @ 表格1 第8行第2列
+[1/4] 处理第 2/4 个文件
+成功: sample_bank_receipt.xlsx -> D:\AI\project\sensitive\output\sample_bank_receipt_redacted.xlsx (脱敏处: 11)
+  - [IBAN账号] 'HD202403260002' @ 电子回单!B3
+  - [付款方户名] '王五' @ 电子回单!B4
+  - [付款方账号] '6227881234567890567' @ 电子回单!D4
+  - [银行账号] '6227881234567890567' @ 电子回单!D4
+  - [付款方户名] '建设银行广州分行' @ 电子回单!B5
+  - [付款方开户行] '建设银行广州分行' @ 电子回单!B5
+  - [银行账号] '440102199001011234' @ 电子回单!D5
+  - [身份证号] '440102199001011234' @ 电子回单!D5
+  - [付款方户名] '开户行' @ 电子回单!A5
+  - [银行账号] '6222031234567893456' @ 电子回单!D6
+  - [手机号码] '13987654321' @ 电子回单!B9
+[2/4] 处理第 3/4 个文件
+
+Fetching 6 files:   0
+%|          | 0/6 [00
+:00<?, ?it/s][2026-03
+-26 18:55:57,845] [  
+  INFO] _client.py:10
+25 - HTTP Request: HE
+AD https://huggingfac
+e.co/PaddlePaddle/PP-
+LCNet_x1_0_doc_ori/re
+solve/d3b95a6dff5fe8a
+94f2748e12b61cb26818a
+0df8/inference.json "
+HTTP/1.1 307 Temporar
+y Redirect"
+[2026-03-26 18:55:58,
+078] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/api/reso
+lve-cache/models/Padd
+lePaddle/PP-LCNet_x1_
+0_doc_ori/d3b95a6dff5
+fe8a94f2748e12b61cb26
+818a0df8/inference.js
+on "HTTP/1.1 200 OK"
+[2026-03-26 18:55:58,
+346] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/resol
+ve-cache/models/Paddl
+ePaddle/PP-LCNet_x1_0
+_doc_ori/d3b95a6dff5f
+e8a94f2748e12b61cb268
+18a0df8/inference.jso
+n "HTTP/1.1 200 OK"
+[2026-03-26 18:55:58,
+746] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/PaddlePa
+ddle/PP-LCNet_x1_0_do
+c_ori/resolve/d3b95a6
+dff5fe8a94f2748e12b61
+cb26818a0df8/config.j
+son "HTTP/1.1 307 Tem
+porary Redirect"
+[2026-03-26 18:55:58,
+838] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/PaddlePa
+ddle/PP-LCNet_x1_0_do
+c_ori/resolve/d3b95a6
+dff5fe8a94f2748e12b61
+cb26818a0df8/.gitattr
+ibutes "HTTP/1.1 307 
+Temporary Redirect"
+[2026-03-26 18:55:58,
+939] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/PaddlePa
+ddle/PP-LCNet_x1_0_do
+c_ori/resolve/d3b95a6
+dff5fe8a94f2748e12b61
+cb26818a0df8/README.m
+d "HTTP/1.1 307 Tempo
+rary Redirect"
+[2026-03-26 18:55:58,
+979] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/api/reso
+lve-cache/models/Padd
+lePaddle/PP-LCNet_x1_
+0_doc_ori/d3b95a6dff5
+fe8a94f2748e12b61cb26
+818a0df8/config.json 
+"HTTP/1.1 200 OK"
+[2026-03-26 18:55:58,
+999] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/PaddlePa
+ddle/PP-LCNet_x1_0_do
+c_ori/resolve/d3b95a6
+dff5fe8a94f2748e12b61
+cb26818a0df8/inferenc
+e.pdiparams "HTTP/1.1
+ 302 Found"
+[2026-03-26 18:55:59,
+039] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/PaddlePa
+ddle/PP-LCNet_x1_0_do
+c_ori/resolve/d3b95a6
+dff5fe8a94f2748e12b61
+cb26818a0df8/inferenc
+e.yml "HTTP/1.1 307 T
+emporary Redirect"
+[2026-03-26 18:55:59,
+068] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/api/reso
+lve-cache/models/Padd
+lePaddle/PP-LCNet_x1_
+0_doc_ori/d3b95a6dff5
+fe8a94f2748e12b61cb26
+818a0df8/.gitattribut
+es "HTTP/1.1 200 OK"
+[2026-03-26 18:55:59,
+141] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/api/reso
+lve-cache/models/Padd
+lePaddle/PP-LCNet_x1_
+0_doc_ori/d3b95a6dff5
+fe8a94f2748e12b61cb26
+818a0df8/README.md "H
+TTP/1.1 200 OK"
+[2026-03-26 18:55:59,
+217] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/resol
+ve-cache/models/Paddl
+ePaddle/PP-LCNet_x1_0
+_doc_ori/d3b95a6dff5f
+e8a94f2748e12b61cb268
+18a0df8/config.json "
+HTTP/1.1 200 OK"
+[2026-03-26 18:55:59,
+279] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/api/reso
+lve-cache/models/Padd
+lePaddle/PP-LCNet_x1_
+0_doc_ori/d3b95a6dff5
+fe8a94f2748e12b61cb26
+818a0df8/inference.ym
+l "HTTP/1.1 200 OK"
+[2026-03-26 18:55:59,
+299] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/resol
+ve-cache/models/Paddl
+ePaddle/PP-LCNet_x1_0
+_doc_ori/d3b95a6dff5f
+e8a94f2748e12b61cb268
+18a0df8/.gitattribute
+s "HTTP/1.1 200 OK"
+
+Fetching 6 files:  17
+%|█▋        | 1/6 [00
+:01<00:09,  1.93s/it]
+[2026-03-26 18:55:59,
+352] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/resol
+ve-cache/models/Paddl
+ePaddle/PP-LCNet_x1_0
+_doc_ori/d3b95a6dff5f
+e8a94f2748e12b61cb268
+18a0df8/README.md "HT
+TP/1.1 200 OK"
+[2026-03-26 18:55:59,
+369] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/model
+s/PaddlePaddle/PP-LCN
+et_x1_0_doc_ori/xet-r
+ead-token/d3b95a6dff5
+fe8a94f2748e12b61cb26
+818a0df8 "HTTP/1.1 20
+0 OK"
+[2026-03-26 18:55:59,
+512] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/resol
+ve-cache/models/Paddl
+ePaddle/PP-LCNet_x1_0
+_doc_ori/d3b95a6dff5f
+e8a94f2748e12b61cb268
+18a0df8/inference.yml
+ "HTTP/1.1 200 OK"
+
+Fetching 6 files:  83
+%|████████▎ | 5/6 [00
+:09<00:01,  1.88s/it]
+Fetching 6 files: 100
+%|██████████| 6/6 [00
+:09<00:00,  1.57s/it]
+WARNING: Logging befo
+re InitGoogleLogging(
+) is written to STDER
+R
+I0326 18:56:07.064181
+ 12104 onednn_context
+.cc:81] oneDNN v3.6.2
+[32mCreating model: 
+('UVDoc', None)[0m
+[32mUsing official m
+odel (UVDoc), the mod
+el files will be auto
+matically downloaded 
+and saved in `C:\User
+s\61588\.paddlex\offi
+cial_models\UVDoc`.[
+0m
+[2026-03-26 18:56:09,
+124] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/model
+s/PaddlePaddle/UVDoc/
+revision/main "HTTP/1
+.1 200 OK"
+
+Fetching 6 files:   0
+%|          | 0/6 [00
+:00<?, ?it/s][2026-03
+-26 18:56:09,491] [  
+  INFO] _client.py:10
+25 - HTTP Request: HE
+AD https://huggingfac
+e.co/PaddlePaddle/UVD
+oc/resolve/16c3f0ea9c
+2f0c6a57e24160f7eeaa7
+574613fa3/config.json
+ "HTTP/1.1 307 Tempor
+ary Redirect"
+[2026-03-26 18:56:09,
+731] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/api/reso
+lve-cache/models/Padd
+lePaddle/UVDoc/16c3f0
+ea9c2f0c6a57e24160f7e
+eaa7574613fa3/config.
+json "HTTP/1.1 200 OK
+"
+[2026-03-26 18:56:09,
+971] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/resol
+ve-cache/models/Paddl
+ePaddle/UVDoc/16c3f0e
+a9c2f0c6a57e24160f7ee
+aa7574613fa3/config.j
+son "HTTP/1.1 200 OK"
+[2026-03-26 18:56:10,
+450] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/PaddlePa
+ddle/UVDoc/resolve/16
+c3f0ea9c2f0c6a57e2416
+0f7eeaa7574613fa3/.gi
+tattributes "HTTP/1.1
+ 307 Temporary Redire
+ct"
+[2026-03-26 18:56:10,
+570] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/PaddlePa
+ddle/UVDoc/resolve/16
+c3f0ea9c2f0c6a57e2416
+0f7eeaa7574613fa3/inf
+erence.pdiparams "HTT
+P/1.1 302 Found"
+[2026-03-26 18:56:10,
+631] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/PaddlePa
+ddle/UVDoc/resolve/16
+c3f0ea9c2f0c6a57e2416
+0f7eeaa7574613fa3/inf
+erence.json "HTTP/1.1
+ 307 Temporary Redire
+ct"
+[2026-03-26 18:56:10,
+633] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/PaddlePa
+ddle/UVDoc/resolve/16
+c3f0ea9c2f0c6a57e2416
+0f7eeaa7574613fa3/inf
+erence.yml "HTTP/1.1 
+307 Temporary Redirec
+t"
+[2026-03-26 18:56:10,
+688] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/api/reso
+lve-cache/models/Padd
+lePaddle/UVDoc/16c3f0
+ea9c2f0c6a57e24160f7e
+eaa7574613fa3/.gitatt
+ributes "HTTP/1.1 200
+ OK"
+[2026-03-26 18:56:10,
+740] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/PaddlePa
+ddle/UVDoc/resolve/16
+c3f0ea9c2f0c6a57e2416
+0f7eeaa7574613fa3/REA
+DME.md "HTTP/1.1 307 
+Temporary Redirect"
+[2026-03-26 18:56:10,
+848] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/api/reso
+lve-cache/models/Padd
+lePaddle/UVDoc/16c3f0
+ea9c2f0c6a57e24160f7e
+eaa7574613fa3/inferen
+ce.json "HTTP/1.1 200
+ OK"
+[2026-03-26 18:56:10,
+868] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/api/reso
+lve-cache/models/Padd
+lePaddle/UVDoc/16c3f0
+ea9c2f0c6a57e24160f7e
+eaa7574613fa3/inferen
+ce.yml "HTTP/1.1 200 
+OK"
+[2026-03-26 18:56:10,
+887] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/model
+s/PaddlePaddle/UVDoc/
+xet-read-token/16c3f0
+ea9c2f0c6a57e24160f7e
+eaa7574613fa3 "HTTP/1
+.1 200 OK"
+[2026-03-26 18:56:10,
+928] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/resol
+ve-cache/models/Paddl
+ePaddle/UVDoc/16c3f0e
+a9c2f0c6a57e24160f7ee
+aa7574613fa3/.gitattr
+ibutes "HTTP/1.1 200 
+OK"
+
+Fetching 6 files:  17
+%|█▋        | 1/6 [00
+:01<00:09,  1.80s/it]
+[2026-03-26 18:56:10,
+970] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/api/reso
+lve-cache/models/Padd
+lePaddle/UVDoc/16c3f0
+ea9c2f0c6a57e24160f7e
+eaa7574613fa3/README.
+md "HTTP/1.1 200 OK"
+[2026-03-26 18:56:11,
+119] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/resol
+ve-cache/models/Paddl
+ePaddle/UVDoc/16c3f0e
+a9c2f0c6a57e24160f7ee
+aa7574613fa3/inferenc
+e.json "HTTP/1.1 200 
+OK"
+[2026-03-26 18:56:11,
+121] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/resol
+ve-cache/models/Paddl
+ePaddle/UVDoc/16c3f0e
+a9c2f0c6a57e24160f7ee
+aa7574613fa3/inferenc
+e.yml "HTTP/1.1 200 O
+K"
+[2026-03-26 18:56:11,
+216] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/resol
+ve-cache/models/Paddl
+ePaddle/UVDoc/16c3f0e
+a9c2f0c6a57e24160f7ee
+aa7574613fa3/README.m
+d "HTTP/1.1 200 OK"
+
+Fetching 6 files:  33
+%|███▎      | 2/6 [00
+:02<00:03,  1.09it/s]
+Fetching 6 files:  83
+%|████████▎ | 5/6 [00
+:06<00:01,  1.42s/it]
+Fetching 6 files: 100
+%|██████████| 6/6 [00
+:06<00:00,  1.16s/it]
+[32mCreating model: 
+('PP-LCNet_x1_0_textl
+ine_ori', None)[0m
+[32mUsing official m
+odel (PP-LCNet_x1_0_t
+extline_ori), the mod
+el files will be auto
+matically downloaded 
+and saved in `C:\User
+s\61588\.paddlex\offi
+cial_models\PP-LCNet_
+x1_0_textline_ori`.[
+0m
+[2026-03-26 18:56:17,
+526] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/model
+s/PaddlePaddle/PP-LCN
+et_x1_0_textline_ori/
+revision/main "HTTP/1
+.1 200 OK"
+
+Fetching 6 files:   0
+%|          | 0/6 [00
+:00<?, ?it/s][2026-03
+-26 18:56:17,853] [  
+  INFO] _client.py:10
+25 - HTTP Request: HE
+AD https://huggingfac
+e.co/PaddlePaddle/PP-
+LCNet_x1_0_textline_o
+ri/resolve/cd237a44b0
+e359d4fe38310a416203c
+f7403faa5/config.json
+ "HTTP/1.1 307 Tempor
+ary Redirect"
+[2026-03-26 18:56:18,
+047] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/api/reso
+lve-cache/models/Padd
+lePaddle/PP-LCNet_x1_
+0_textline_ori/cd237a
+44b0e359d4fe38310a416
+203cf7403faa5/config.
+json "HTTP/1.1 200 OK
+"
+[2026-03-26 18:56:18,
+241] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/resol
+ve-cache/models/Paddl
+ePaddle/PP-LCNet_x1_0
+_textline_ori/cd237a4
+4b0e359d4fe38310a4162
+03cf7403faa5/config.j
+son "HTTP/1.1 200 OK"
+[2026-03-26 18:56:18,
+886] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/PaddlePa
+ddle/PP-LCNet_x1_0_te
+xtline_ori/resolve/cd
+237a44b0e359d4fe38310
+a416203cf7403faa5/.gi
+tattributes "HTTP/1.1
+ 307 Temporary Redire
+ct"
+[2026-03-26 18:56:18,
+930] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/PaddlePa
+ddle/PP-LCNet_x1_0_te
+xtline_ori/resolve/cd
+237a44b0e359d4fe38310
+a416203cf7403faa5/inf
+erence.json "HTTP/1.1
+ 307 Temporary Redire
+ct"
+[2026-03-26 18:56:19,
+085] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/api/reso
+lve-cache/models/Padd
+lePaddle/PP-LCNet_x1_
+0_textline_ori/cd237a
+44b0e359d4fe38310a416
+203cf7403faa5/.gitatt
+ributes "HTTP/1.1 200
+ OK"
+[2026-03-26 18:56:19,
+096] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/PaddlePa
+ddle/PP-LCNet_x1_0_te
+xtline_ori/resolve/cd
+237a44b0e359d4fe38310
+a416203cf7403faa5/REA
+DME.md "HTTP/1.1 307 
+Temporary Redirect"
+[2026-03-26 18:56:19,
+109] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/PaddlePa
+ddle/PP-LCNet_x1_0_te
+xtline_ori/resolve/cd
+237a44b0e359d4fe38310
+a416203cf7403faa5/inf
+erence.pdiparams "HTT
+P/1.1 302 Found"
+[2026-03-26 18:56:19,
+139] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/api/reso
+lve-cache/models/Padd
+lePaddle/PP-LCNet_x1_
+0_textline_ori/cd237a
+44b0e359d4fe38310a416
+203cf7403faa5/inferen
+ce.json "HTTP/1.1 200
+ OK"
+[2026-03-26 18:56:19,
+197] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/PaddlePa
+ddle/PP-LCNet_x1_0_te
+xtline_ori/resolve/cd
+237a44b0e359d4fe38310
+a416203cf7403faa5/inf
+erence.yml "HTTP/1.1 
+307 Temporary Redirec
+t"
+[2026-03-26 18:56:19,
+294] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/api/reso
+lve-cache/models/Padd
+lePaddle/PP-LCNet_x1_
+0_textline_ori/cd237a
+44b0e359d4fe38310a416
+203cf7403faa5/README.
+md "HTTP/1.1 200 OK"
+[2026-03-26 18:56:19,
+307] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/resol
+ve-cache/models/Paddl
+ePaddle/PP-LCNet_x1_0
+_textline_ori/cd237a4
+4b0e359d4fe38310a4162
+03cf7403faa5/.gitattr
+ibutes "HTTP/1.1 200 
+OK"
+
+Fetching 6 files:  17
+%|█▋        | 1/6 [00
+:01<00:08,  1.78s/it]
+[2026-03-26 18:56:19,
+360] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/resol
+ve-cache/models/Paddl
+ePaddle/PP-LCNet_x1_0
+_textline_ori/cd237a4
+4b0e359d4fe38310a4162
+03cf7403faa5/inferenc
+e.json "HTTP/1.1 200 
+OK"
+[2026-03-26 18:56:19,
+418] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/api/reso
+lve-cache/models/Padd
+lePaddle/PP-LCNet_x1_
+0_textline_ori/cd237a
+44b0e359d4fe38310a416
+203cf7403faa5/inferen
+ce.yml "HTTP/1.1 200 
+OK"
+[2026-03-26 18:56:19,
+464] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/model
+s/PaddlePaddle/PP-LCN
+et_x1_0_textline_ori/
+xet-read-token/cd237a
+44b0e359d4fe38310a416
+203cf7403faa5 "HTTP/1
+.1 200 OK"
+[2026-03-26 18:56:19,
+499] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/resol
+ve-cache/models/Paddl
+ePaddle/PP-LCNet_x1_0
+_textline_ori/cd237a4
+4b0e359d4fe38310a4162
+03cf7403faa5/README.m
+d "HTTP/1.1 200 OK"
+
+Fetching 6 files:  33
+%|███▎      | 2/6 [00
+:01<00:03,  1.19it/s]
+[2026-03-26 18:56:19,
+636] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/resol
+ve-cache/models/Paddl
+ePaddle/PP-LCNet_x1_0
+_textline_ori/cd237a4
+4b0e359d4fe38310a4162
+03cf7403faa5/inferenc
+e.yml "HTTP/1.1 200 O
+K"
+
+Fetching 6 files:  83
+%|████████▎ | 5/6 [00
+:03<00:00,  1.63it/s]
+Fetching 6 files: 100
+%|██████████| 6/6 [00
+:03<00:00,  1.70it/s]
+[32mCreating model: 
+('PP-OCRv5_server_det
+', None)[0m
+[32mUsing official m
+odel (PP-OCRv5_server
+_det), the model file
+s will be automatical
+ly downloaded and sav
+ed in `C:\Users\61588
+\.paddlex\official_mo
+dels\PP-OCRv5_server_
+det`.[0m
+[2026-03-26 18:56:21,
+890] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/model
+s/PaddlePaddle/PP-OCR
+v5_server_det/revisio
+n/main "HTTP/1.1 200 
+OK"
+
+Fetching 6 files:   0
+%|          | 0/6 [00
+:00<?, ?it/s][2026-03
+-26 18:56:22,222] [  
+  INFO] _client.py:10
+25 - HTTP Request: HE
+AD https://huggingfac
+e.co/PaddlePaddle/PP-
+OCRv5_server_det/reso
+lve/ca867c897ecbca887
+3081573a802ad70d499cb
+94/config.json "HTTP/
+1.1 307 Temporary Red
+irect"
+[2026-03-26 18:56:22,
+243] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/PaddlePa
+ddle/PP-OCRv5_server_
+det/resolve/ca867c897
+ecbca8873081573a802ad
+70d499cb94/.gitattrib
+utes "HTTP/1.1 307 Te
+mporary Redirect"
+[2026-03-26 18:56:22,
+325] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/PaddlePa
+ddle/PP-OCRv5_server_
+det/resolve/ca867c897
+ecbca8873081573a802ad
+70d499cb94/inference.
+json "HTTP/1.1 307 Te
+mporary Redirect"
+[2026-03-26 18:56:22,
+371] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/PaddlePa
+ddle/PP-OCRv5_server_
+det/resolve/ca867c897
+ecbca8873081573a802ad
+70d499cb94/inference.
+pdiparams "HTTP/1.1 3
+02 Found"
+[2026-03-26 18:56:22,
+377] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/PaddlePa
+ddle/PP-OCRv5_server_
+det/resolve/ca867c897
+ecbca8873081573a802ad
+70d499cb94/inference.
+yml "HTTP/1.1 307 Tem
+porary Redirect"
+[2026-03-26 18:56:22,
+414] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/PaddlePa
+ddle/PP-OCRv5_server_
+det/resolve/ca867c897
+ecbca8873081573a802ad
+70d499cb94/README.md 
+"HTTP/1.1 307 Tempora
+ry Redirect"
+[2026-03-26 18:56:22,
+420] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/api/reso
+lve-cache/models/Padd
+lePaddle/PP-OCRv5_ser
+ver_det/ca867c897ecbc
+a8873081573a802ad70d4
+99cb94/config.json "H
+TTP/1.1 200 OK"
+[2026-03-26 18:56:22,
+454] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/api/reso
+lve-cache/models/Padd
+lePaddle/PP-OCRv5_ser
+ver_det/ca867c897ecbc
+a8873081573a802ad70d4
+99cb94/.gitattributes
+ "HTTP/1.1 200 OK"
+[2026-03-26 18:56:22,
+562] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/api/reso
+lve-cache/models/Padd
+lePaddle/PP-OCRv5_ser
+ver_det/ca867c897ecbc
+a8873081573a802ad70d4
+99cb94/inference.json
+ "HTTP/1.1 200 OK"
+[2026-03-26 18:56:22,
+603] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/api/reso
+lve-cache/models/Padd
+lePaddle/PP-OCRv5_ser
+ver_det/ca867c897ecbc
+a8873081573a802ad70d4
+99cb94/inference.yml 
+"HTTP/1.1 200 OK"
+[2026-03-26 18:56:22,
+617] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/resol
+ve-cache/models/Paddl
+ePaddle/PP-OCRv5_serv
+er_det/ca867c897ecbca
+8873081573a802ad70d49
+9cb94/config.json "HT
+TP/1.1 200 OK"
+[2026-03-26 18:56:22,
+656] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/api/reso
+lve-cache/models/Padd
+lePaddle/PP-OCRv5_ser
+ver_det/ca867c897ecbc
+a8873081573a802ad70d4
+99cb94/README.md "HTT
+P/1.1 200 OK"
+[2026-03-26 18:56:22,
+678] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/resol
+ve-cache/models/Paddl
+ePaddle/PP-OCRv5_serv
+er_det/ca867c897ecbca
+8873081573a802ad70d49
+9cb94/.gitattributes 
+"HTTP/1.1 200 OK"
+
+Fetching 6 files:  17
+%|█▋        | 1/6 [00
+:00<00:03,  1.29it/s]
+[2026-03-26 18:56:22,
+690] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/model
+s/PaddlePaddle/PP-OCR
+v5_server_det/xet-rea
+d-token/ca867c897ecbc
+a8873081573a802ad70d4
+99cb94 "HTTP/1.1 200 
+OK"
+[2026-03-26 18:56:22,
+803] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/resol
+ve-cache/models/Paddl
+ePaddle/PP-OCRv5_serv
+er_det/ca867c897ecbca
+8873081573a802ad70d49
+9cb94/inference.json 
+"HTTP/1.1 200 OK"
+[2026-03-26 18:56:22,
+833] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/resol
+ve-cache/models/Paddl
+ePaddle/PP-OCRv5_serv
+er_det/ca867c897ecbca
+8873081573a802ad70d49
+9cb94/inference.yml "
+HTTP/1.1 200 OK"
+[2026-03-26 18:56:22,
+875] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/resol
+ve-cache/models/Paddl
+ePaddle/PP-OCRv5_serv
+er_det/ca867c897ecbca
+8873081573a802ad70d49
+9cb94/README.md "HTTP
+/1.1 200 OK"
+
+Fetching 6 files:  33
+%|███▎      | 2/6 [00
+:00<00:01,  2.25it/s]
+Fetching 6 files:  83
+%|████████▎ | 5/6 [00
+:14<00:03,  3.28s/it]
+Fetching 6 files: 100
+%|██████████| 6/6 [00
+:14<00:00,  2.37s/it]
+[32mCreating model: 
+('PP-OCRv5_server_rec
+', None)[0m
+[32mUsing official m
+odel (PP-OCRv5_server
+_rec), the model file
+s will be automatical
+ly downloaded and sav
+ed in `C:\Users\61588
+\.paddlex\official_mo
+dels\PP-OCRv5_server_
+rec`.[0m
+[2026-03-26 18:56:40,
+121] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/model
+s/PaddlePaddle/PP-OCR
+v5_server_rec/revisio
+n/main "HTTP/1.1 200 
+OK"
+
+Fetching 6 files:   0
+%|          | 0/6 [00
+:00<?, ?it/s][2026-03
+-26 18:56:40,461] [  
+  INFO] _client.py:10
+25 - HTTP Request: HE
+AD https://huggingfac
+e.co/PaddlePaddle/PP-
+OCRv5_server_rec/reso
+lve/b26c3587fda8da3c8
+ec0ce357214b4d661ff15
+58/README.md "HTTP/1.
+1 307 Temporary Redir
+ect"
+[2026-03-26 18:56:40,
+669] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/api/reso
+lve-cache/models/Padd
+lePaddle/PP-OCRv5_ser
+ver_rec/b26c3587fda8d
+a3c8ec0ce357214b4d661
+ff1558/README.md "HTT
+P/1.1 200 OK"
+[2026-03-26 18:56:40,
+906] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/resol
+ve-cache/models/Paddl
+ePaddle/PP-OCRv5_serv
+er_rec/b26c3587fda8da
+3c8ec0ce357214b4d661f
+f1558/README.md "HTTP
+/1.1 200 OK"
+[2026-03-26 18:56:41,
+604] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/PaddlePa
+ddle/PP-OCRv5_server_
+rec/resolve/b26c3587f
+da8da3c8ec0ce357214b4
+d661ff1558/config.jso
+n "HTTP/1.1 307 Tempo
+rary Redirect"
+[2026-03-26 18:56:41,
+661] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/PaddlePa
+ddle/PP-OCRv5_server_
+rec/resolve/b26c3587f
+da8da3c8ec0ce357214b4
+d661ff1558/.gitattrib
+utes "HTTP/1.1 307 Te
+mporary Redirect"
+[2026-03-26 18:56:41,
+726] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/PaddlePa
+ddle/PP-OCRv5_server_
+rec/resolve/b26c3587f
+da8da3c8ec0ce357214b4
+d661ff1558/inference.
+yml "HTTP/1.1 307 Tem
+porary Redirect"
+[2026-03-26 18:56:41,
+746] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/PaddlePa
+ddle/PP-OCRv5_server_
+rec/resolve/b26c3587f
+da8da3c8ec0ce357214b4
+d661ff1558/inference.
+pdiparams "HTTP/1.1 3
+02 Found"
+[2026-03-26 18:56:41,
+814] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/api/reso
+lve-cache/models/Padd
+lePaddle/PP-OCRv5_ser
+ver_rec/b26c3587fda8d
+a3c8ec0ce357214b4d661
+ff1558/config.json "H
+TTP/1.1 200 OK"
+[2026-03-26 18:56:41,
+821] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/PaddlePa
+ddle/PP-OCRv5_server_
+rec/resolve/b26c3587f
+da8da3c8ec0ce357214b4
+d661ff1558/inference.
+json "HTTP/1.1 307 Te
+mporary Redirect"
+[2026-03-26 18:56:41,
+901] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/api/reso
+lve-cache/models/Padd
+lePaddle/PP-OCRv5_ser
+ver_rec/b26c3587fda8d
+a3c8ec0ce357214b4d661
+ff1558/.gitattributes
+ "HTTP/1.1 200 OK"
+[2026-03-26 18:56:41,
+966] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/api/reso
+lve-cache/models/Padd
+lePaddle/PP-OCRv5_ser
+ver_rec/b26c3587fda8d
+a3c8ec0ce357214b4d661
+ff1558/inference.yml 
+"HTTP/1.1 200 OK"
+[2026-03-26 18:56:42,
+057] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: HEAD https://hu
+ggingface.co/api/reso
+lve-cache/models/Padd
+lePaddle/PP-OCRv5_ser
+ver_rec/b26c3587fda8d
+a3c8ec0ce357214b4d661
+ff1558/inference.json
+ "HTTP/1.1 200 OK"
+[2026-03-26 18:56:42,
+081] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/model
+s/PaddlePaddle/PP-OCR
+v5_server_rec/xet-rea
+d-token/b26c3587fda8d
+a3c8ec0ce357214b4d661
+ff1558 "HTTP/1.1 200 
+OK"
+[2026-03-26 18:56:42,
+098] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/resol
+ve-cache/models/Paddl
+ePaddle/PP-OCRv5_serv
+er_rec/b26c3587fda8da
+3c8ec0ce357214b4d661f
+f1558/config.json "HT
+TP/1.1 200 OK"
+[2026-03-26 18:56:42,
+143] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/resol
+ve-cache/models/Paddl
+ePaddle/PP-OCRv5_serv
+er_rec/b26c3587fda8da
+3c8ec0ce357214b4d661f
+f1558/.gitattributes 
+"HTTP/1.1 200 OK"
+
+Fetching 6 files:  17
+%|█▋        | 1/6 [00
+:02<00:10,  2.02s/it]
+[2026-03-26 18:56:42,
+293] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/resol
+ve-cache/models/Paddl
+ePaddle/PP-OCRv5_serv
+er_rec/b26c3587fda8da
+3c8ec0ce357214b4d661f
+f1558/inference.yml "
+HTTP/1.1 200 OK"
+
+Fetching 6 files:  50
+%|█████     | 3/6 [00
+:02<00:01,  1.66it/s]
+[2026-03-26 18:56:42,
+370] [    INFO] _clie
+nt.py:1025 - HTTP Req
+uest: GET https://hug
+gingface.co/api/resol
+ve-cache/models/Paddl
+ePaddle/PP-OCRv5_serv
+er_rec/b26c3587fda8da
+3c8ec0ce357214b4d661f
+f1558/inference.json 
+"HTTP/1.1 200 OK"
+
+Fetching 6 files:  83
+%|████████▎ | 5/6 [00
+:14<00:03,  3.46s/it]
+Fetching 6 files: 100
+%|██████████| 6/6 [00
+:14<00:00,  2.43s/it]
+失败: sample_bank_receipt.png - PaddleOCR.predict() got an unexpected keyword argument 'cls'
+[3/4] 处理第 4/4 个文件
+失败: sample_bank_receipt.pdf - PaddleOCR.predict() got an unexpected keyword argument 'cls'
+[4/4] 处理完成
+
+集成测试失败！有文件未能成功处理。

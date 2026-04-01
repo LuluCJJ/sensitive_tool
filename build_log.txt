@@ -1,0 +1,122 @@
+﻿uv : 370 WARNING: col
+lect_data_files - ski
+pping data collection
+ for module 'paddleoc
+r' as it is not a pac
+kage.
+所在位置 行:1 字符: 145
++ ... vironmentVariab
+le("Path","User"); uv
+ run python build.py 
+2>&1 | Out-F ...
++                    
+                   ~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~
+    + CategoryInfo   
+           : NotSpe  
+  cified: (370 WAR   
+ NING: co... not     
+a package.:Strin    g
+) [], RemoteExc    ep
+tion
+    + FullyQualified 
+   ErrorId : Native  
+  CommandError
+ 
+370 WARNING: collect_
+dynamic_libs - skippi
+ng library collection
+ for module 'paddleoc
+r' as it is not a pac
+kage.
+586 WARNING: collect_
+data_files - skipping
+ data collection for 
+module 'paddle' as it
+ is not a package.
+586 WARNING: collect_
+dynamic_libs - skippi
+ng library collection
+ for module 'paddle' 
+as it is not a packag
+e.
+818 WARNING: collect_
+data_files - skipping
+ data collection for 
+module 'pyclipper' as
+ it is not a package.
+818 WARNING: collect_
+dynamic_libs - skippi
+ng library collection
+ for module 'pyclippe
+r' as it is not a pac
+kage.
+1026 WARNING: collect
+_data_files - skippin
+g data collection for
+ module 'imaug' as it
+ is not a package.
+1026 WARNING: collect
+_dynamic_libs - skipp
+ing library collectio
+n for module 'imaug' 
+as it is not a packag
+e.
+1210 WARNING: collect
+_data_files - skippin
+g data collection for
+ module 'lmdb' as it 
+is not a package.
+1210 WARNING: collect
+_dynamic_libs - skipp
+ing library collectio
+n for module 'lmdb' a
+s it is not a package
+.
+1375 WARNING: collect
+_data_files - skippin
+g data collection for
+ module 'skimage' as 
+it is not a package.
+1375 WARNING: collect
+_dynamic_libs - skipp
+ing library collectio
+n for module 'skimage
+' as it is not a pack
+age.
+1581 WARNING: collect
+_data_files - skippin
+g data collection for
+ module 'imgaug' as i
+t is not a package.
+1581 WARNING: collect
+_dynamic_libs - skipp
+ing library collectio
+n for module 'imgaug'
+ as it is not a packa
+ge.
+1790 WARNING: collect
+_data_files - skippin
+g data collection for
+ module 'scipy' as it
+ is not a package.
+1790 WARNING: collect
+_dynamic_libs - skipp
+ing library collectio
+n for module 'scipy' 
+as it is not a packag
+e.
+1940 WARNING: collect
+_data_files - skippin
+g data collection for
+ module 'numpy' as it
+ is not a package.
+1940 WARNING: collect
+_dynamic_libs - skipp
+ing library collectio
+n for module 'numpy' 
+as it is not a packag
+e.
+开始打包...
+打包完成！输出位于 dist 目录。

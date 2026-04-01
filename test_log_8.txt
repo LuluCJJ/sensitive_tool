@@ -1,0 +1,65 @@
+﻿开始集成功能测试...
+测试处理 Word, Excel, 图片和 PDF...
+[0/4] 处理第 1/4 个文件
+成功: sample_bank_receipt.docx -> D:\AI\project\sensitive\output\sample_bank_receipt_redacted.docx (脱敏处: 9)
+  - [IBAN账号] 'HD202403260001' @ 表格1 第1行第2列
+  - [付款方户名] '张三丰' @ 表格1 第2行第2列
+  - [付款方账号] '6222021234567890123' @ 表格1 第2行第4列
+  - [银行账号] '6222021234567890123' @ 表格1 第2行第4列
+  - [付款方户名] '工商银行北京分行营业部' @ 表格1 第3行第2列
+  - [付款方开户行] '工商银行北京分行营业部' @ 表格1 第3行第2列
+  - [付款方户名] '开户行' @ 表格1 第3行第1列
+  - [银行账号] '6217001234567891234' @ 表格1 第4行第4列
+  - [手机号码] '13812345678' @ 表格1 第8行第2列
+[1/4] 处理第 2/4 个文件
+成功: sample_bank_receipt.xlsx -> D:\AI\project\sensitive\output\sample_bank_receipt_redacted.xlsx (脱敏处: 11)
+  - [IBAN账号] 'HD202403260002' @ 电子回单!B3
+  - [付款方户名] '王五' @ 电子回单!B4
+  - [付款方账号] '6227881234567890567' @ 电子回单!D4
+  - [银行账号] '6227881234567890567' @ 电子回单!D4
+  - [付款方户名] '建设银行广州分行' @ 电子回单!B5
+  - [付款方开户行] '建设银行广州分行' @ 电子回单!B5
+  - [银行账号] '440102199001011234' @ 电子回单!D5
+  - [身份证号] '440102199001011234' @ 电子回单!D5
+  - [付款方户名] '开户行' @ 电子回单!A5
+  - [银行账号] '6222031234567893456' @ 电子回单!D6
+  - [手机号码] '13987654321' @ 电子回单!B9
+[2/4] 处理第 3/4 个文件
+失败: sample_bank_receipt.png - name 'predict_system' is not defined
+Traceback (most recent call last):
+  File "D:\AI\project\sensitive\core\redactor.py", line 84, in process_file
+    processor.process(file_path, output_path, log)
+  File "D:\AI\project\sensitive\processors\image_processor.py", line 26, in process
+    img = self._process_image(img, log, '图片')
+  File "D:\AI\project\sensitive\processors\image_processor.py", line 34, in _process_image
+    ocr_results = self.ocr_engine.recognize_from_image(img)
+  File "D:\AI\project\sensitive\core\ocr_engine.py", line 90, in recognize_from_image
+    self._ensure_initialized()
+  File "D:\AI\project\sensitive\core\ocr_engine.py", line 47, in _ensure_initialized
+    from paddleocr import PaddleOCR
+  File "D:\AI\project\sensitive\.venv_new\lib\site-packages\paddleocr\__init__.py", line 14, in <module>
+    from .paddleocr import *
+  File "D:\AI\project\sensitive\.venv_new\lib\site-packages\paddleocr\paddleocr.py", line 575, in <module>
+    class PaddleOCR(predict_system.TextSystem):
+NameError: name 'predict_system' is not defined
+
+[3/4] 处理第 4/4 个文件
+失败: sample_bank_receipt.pdf - name 'predict_system' is not defined
+Traceback (most recent call last):
+  File "D:\AI\project\sensitive\core\redactor.py", line 84, in process_file
+    processor.process(file_path, output_path, log)
+  File "D:\AI\project\sensitive\processors\pdf_processor.py", line 40, in process
+    img = self._process_image(img, log, location_prefix)
+  File "D:\AI\project\sensitive\processors\image_processor.py", line 34, in _process_image
+    ocr_results = self.ocr_engine.recognize_from_image(img)
+  File "D:\AI\project\sensitive\core\ocr_engine.py", line 90, in recognize_from_image
+    self._ensure_initialized()
+  File "D:\AI\project\sensitive\core\ocr_engine.py", line 47, in _ensure_initialized
+    from paddleocr import PaddleOCR
+  File "D:\AI\project\sensitive\.venv_new\lib\site-packages\paddleocr\paddleocr.py", line 575, in <module>
+    class PaddleOCR(predict_system.TextSystem):
+NameError: name 'predict_system' is not defined
+
+[4/4] 处理完成
+
+集成测试失败！有文件未能成功处理。

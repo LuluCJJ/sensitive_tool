@@ -1,0 +1,79 @@
+﻿d:\AI\project\sensiti
+ve\.venv_stable\Scrip
+ts\python.exe : 2975 
+WARNING: Failed to co
+llect submodules for 
+'paddleocr.ppstructur
+e.table.table_metric'
+ because importing 'p
+addleocr.ppstructure.
+table.table_metric' r
+aised: ModuleNotFound
+Error: No module name
+d 'apted'
+所在位置 行:1 字符: 179
++ ... lyContinue; d:\
+AI\project\sensitive\
+.venv_stable\Scripts\
+python.exe b ...
++                 ~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~
+    + CategoryInfo   
+           : NotSpe  
+  cified: (2975 WA   
+ RNING: F...e nam    
+ed 'apted':Strin    g
+) [], RemoteExc    ep
+tion
+    + FullyQualified 
+   ErrorId : Native  
+  CommandError
+ 
+13338 WARNING: collec
+t_data_files - skippi
+ng data collection fo
+r module 'imaug' as i
+t is not a package.
+13339 WARNING: collec
+t_dynamic_libs - skip
+ping library collecti
+on for module 'imaug'
+ as it is not a packa
+ge.
+1046 WARNING: Failed 
+to collect submodules
+ for 'scipy._lib.arra
+y_api_compat.torch' b
+ecause importing 'sci
+py._lib.array_api_com
+pat.torch' raised: Mo
+duleNotFoundError: No
+ module named 'torch'
+D:\AI\project\sensiti
+ve\.venv_stable\lib\s
+ite-packages\PyInstal
+ler\utils\hooks\__ini
+t__.py:665: UserWarni
+ng: The numpy.array_a
+pi submodule is still
+ experimental. See NE
+P 47.
+  __import__(name)
+123822 WARNING: Hidde
+n import "scipy.speci
+al._cdflib" not found
+!
+D:\AI\project\sensiti
+ve\.venv_stable\lib\s
+ite-packages\PyInstal
+ler\building\build_ma
+in.py:227: UserWarnin
+g: The numpy.array_ap
+i submodule is still 
+experimental. See NEP
+ 47.
+  __import__(package)
+开始打包...
+打包完成！输出位于 dist 目录。

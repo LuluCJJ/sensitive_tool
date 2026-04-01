@@ -1,0 +1,84 @@
+﻿uv :   脳 No solution 
+found when resolving 
+dependencies:
+所在位置 行:1 字符: 145
++ ... iable("Path","U
+ser"); uv pip install
+ -r requirements.txt 
+2>&1 | Out-F ...
++                    
+       ~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~
+    + CategoryInfo   
+           : NotSpe  
+  cified: (  脳 No    
+ solution...g dep    
+endencies::Strin    g
+) [], RemoteExc    ep
+tion
+    + FullyQualified 
+   ErrorId : Native  
+  CommandError
+ 
+  鈺扳攢鈻?Because only t
+he following versions
+ of paddlepaddle are 
+available:
+          paddlepaddl
+e<2.5.0
+          paddlepaddl
+e==2.6.2
+          paddlepaddl
+e==3.0.0
+          paddlepaddl
+e==3.1.0
+          paddlepaddl
+e==3.1.1
+          paddlepaddl
+e==3.2.0
+          paddlepaddl
+e==3.2.1
+          paddlepaddl
+e==3.2.2
+          paddlepaddl
+e==3.3.0
+          paddlepaddl
+e==3.3.1
+      and paddlepaddl
+e>=2.6.2 has no wheel
+s with a matching Pyt
+hon ABI tag
+      (e.g., `cp314`)
+, we can conclude tha
+t paddlepaddle>=2.6.2
+ cannot be
+      used.
+      And because you
+ require paddlepaddle
+>=2.5.0, we can concl
+ude that your
+      requirements ar
+e unsatisfiable.
+
+      hint: Pre-relea
+ses are available for
+ `paddlepaddle` in th
+e requested
+      range (e.g., 3.
+0.0rc1), but pre-rele
+ases weren't enabled 
+(try:
+      `--prerelease=a
+llow`)
+
+      hint: You requi
+re CPython 3.14 (`cp3
+14`), but we only fou
+nd wheels for
+      `paddlepaddle` 
+(v3.3.1) with the fol
+lowing Python ABI tag
+s: `cp39`,
+      `cp310`, `cp311
+`, `cp312`, `cp313`

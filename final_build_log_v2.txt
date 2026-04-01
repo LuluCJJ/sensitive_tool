@@ -1,0 +1,157 @@
+﻿d:\AI\project\sensiti
+ve\.venv_stable\Scrip
+ts\python.exe : 2707 
+WARNING: Failed to co
+llect submodules for 
+'paddleocr.ppstructur
+e.table.table_metric'
+ because importing 'p
+addleocr.ppstructure.
+table.table_metric' r
+aised: ModuleNotFound
+Error: No module name
+d 'apted'
+所在位置 行:1 字符: 145
++ ... h","User"); d:\
+AI\project\sensitive\
+.venv_stable\Scripts\
+python.exe b ...
++                 ~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~
+    + CategoryInfo   
+           : NotSpe  
+  cified: (2707 WA   
+ RNING: F...e nam    
+ed 'apted':Strin    g
+) [], RemoteExc    ep
+tion
+    + FullyQualified 
+   ErrorId : Native  
+  CommandError
+ 
+10779 WARNING: collec
+t_data_files - skippi
+ng data collection fo
+r module 'imaug' as i
+t is not a package.
+10780 WARNING: collec
+t_dynamic_libs - skip
+ping library collecti
+on for module 'imaug'
+ as it is not a packa
+ge.
+1082 WARNING: Failed 
+to collect submodules
+ for 'scipy._lib.arra
+y_api_compat.torch' b
+ecause importing 'sci
+py._lib.array_api_com
+pat.torch' raised: Mo
+duleNotFoundError: No
+ module named 'torch'
+D:\AI\project\sensiti
+ve\.venv_stable\lib\s
+ite-packages\PyInstal
+ler\utils\hooks\__ini
+t__.py:665: UserWarni
+ng: The numpy.array_a
+pi submodule is still
+ experimental. See NE
+P 47.
+  __import__(name)
+120997 WARNING: Hidde
+n import "scipy.speci
+al._cdflib" not found
+!
+D:\AI\project\sensiti
+ve\.venv_stable\lib\s
+ite-packages\PyInstal
+ler\building\build_ma
+in.py:227: UserWarnin
+g: The numpy.array_ap
+i submodule is still 
+experimental. See NEP
+ 47.
+  __import__(package)
+Traceback (most recen
+t call last):
+  File "D:\AI\project
+\sensitive\build.py",
+ line 48, in <module>
+开始打包...
+    build()
+  File "D:\AI\project
+\sensitive\build.py",
+ line 44, in build
+    PyInstaller.__mai
+n__.run(args)
+  File "D:\AI\project
+\sensitive\.venv_stab
+le\lib\site-packages\
+PyInstaller\__main__.
+py", line 215, in run
+    run_build(pyi_con
+fig, spec_file, **var
+s(args))
+  File "D:\AI\project
+\sensitive\.venv_stab
+le\lib\site-packages\
+PyInstaller\__main__.
+py", line 70, in run_
+build
+    PyInstaller.build
+ing.build_main.main(p
+yi_config, spec_file,
+ **kwargs)
+  File "D:\AI\project
+\sensitive\.venv_stab
+le\lib\site-packages\
+PyInstaller\building\
+build_main.py", line 
+1275, in main
+    build(specfile, d
+istpath, workpath, cl
+ean_build)
+  File "D:\AI\project
+\sensitive\.venv_stab
+le\lib\site-packages\
+PyInstaller\building\
+build_main.py", line 
+1213, in build
+    exec(code, spec_n
+amespace)
+  File "D:\AI\project
+\sensitive\银行水单脱敏工具.s
+pec", line 50, in <mo
+dule>
+    exe = EXE(
+  File "D:\AI\project
+\sensitive\.venv_stab
+le\lib\site-packages\
+PyInstaller\building\
+api.py", line 675, in
+ __init__
+    self.__postinit__
+()
+  File "D:\AI\project
+\sensitive\.venv_stab
+le\lib\site-packages\
+PyInstaller\building\
+datastruct.py", line 
+184, in __postinit__
+    self.assemble()
+  File "D:\AI\project
+\sensitive\.venv_stab
+le\lib\site-packages\
+PyInstaller\building\
+api.py", line 769, in
+ assemble
+    os.remove(self.na
+me)
+PermissionError: [Win
+Error 5] 拒绝访问。: 'D:\\
+AI\\project\\sensitiv
+e\\dist\\银行水单脱敏工具.exe
+'

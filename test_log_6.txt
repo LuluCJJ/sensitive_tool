@@ -1,0 +1,176 @@
+﻿d:\AI\project\sensiti
+ve\.venv_new\Scripts\
+python.exe : [33mChe
+cking connectivity to
+ the model hosters, t
+his may take a while.
+ To bypass this check
+, set `PADDLE_PDX_DIS
+ABLE_MODEL_SOURCE_CHE
+CK` to `True`.[0m
+所在位置 行:1 字符: 1
++ d:\AI\project\sensi
+tive\.venv_new\Script
+s\python.exe test_int
+egration ...
++ ~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~
+    + CategoryInfo   
+           : NotSpe  
+  cified: ([33mCh   
+ ecking c... to `    
+True`.[0m:Strin    g
+) [], RemoteExc    ep
+tion
+    + FullyQualified 
+   ErrorId : Native  
+  CommandError
+ 
+信息: 用提供的模式无法找到文件。
+D:\AI\project\sensiti
+ve\.venv_new\lib\site
+-packages\paddle\util
+s\cpp_extension\exten
+sion_utils.py:712: Us
+erWarning: No ccache 
+found. Please be awar
+e that recompiling al
+l source files may be
+ required. You can do
+wnload and install cc
+ache from: https://gi
+thub.com/ccache/ccach
+e/blob/master/doc/INS
+TALL.md
+  warnings.warn(warni
+ng_message)
+[32mCreating model: 
+('PP-LCNet_x1_0_doc_o
+ri', None)[0m
+[32mModel files alre
+ady exist. Using cach
+ed files. To redownlo
+ad, please delete the
+ directory manually: 
+`C:\Users\61588\.padd
+lex\official_models\P
+P-LCNet_x1_0_doc_ori`
+.[0m
+WARNING: Logging befo
+re InitGoogleLogging(
+) is written to STDER
+R
+I0326 18:58:38.940434
+ 15552 onednn_context
+.cc:81] oneDNN v3.6.2
+[32mCreating model: 
+('UVDoc', None)[0m
+[32mModel files alre
+ady exist. Using cach
+ed files. To redownlo
+ad, please delete the
+ directory manually: 
+`C:\Users\61588\.padd
+lex\official_models\U
+VDoc`.[0m
+[32mCreating model: 
+('PP-LCNet_x1_0_textl
+ine_ori', None)[0m
+[32mModel files alre
+ady exist. Using cach
+ed files. To redownlo
+ad, please delete the
+ directory manually: 
+`C:\Users\61588\.padd
+lex\official_models\P
+P-LCNet_x1_0_textline
+_ori`.[0m
+[32mCreating model: 
+('PP-OCRv5_server_det
+', None)[0m
+[32mModel files alre
+ady exist. Using cach
+ed files. To redownlo
+ad, please delete the
+ directory manually: 
+`C:\Users\61588\.padd
+lex\official_models\P
+P-OCRv5_server_det`.
+[0m
+[32mCreating model: 
+('PP-OCRv5_server_rec
+', None)[0m
+[32mModel files alre
+ady exist. Using cach
+ed files. To redownlo
+ad, please delete the
+ directory manually: 
+`C:\Users\61588\.padd
+lex\official_models\P
+P-OCRv5_server_rec`.
+[0m
+开始集成功能测试...
+测试处理 Word, Excel, 图片和 PDF...
+[0/4] 处理第 1/4 个文件
+成功: sample_bank_receipt.docx -> D:\AI\project\sensitive\output\sample_bank_receipt_redacted.docx (脱敏处: 9)
+  - [IBAN账号] 'HD202403260001' @ 表格1 第1行第2列
+  - [付款方户名] '张三丰' @ 表格1 第2行第2列
+  - [付款方账号] '6222021234567890123' @ 表格1 第2行第4列
+  - [银行账号] '6222021234567890123' @ 表格1 第2行第4列
+  - [付款方户名] '工商银行北京分行营业部' @ 表格1 第3行第2列
+  - [付款方开户行] '工商银行北京分行营业部' @ 表格1 第3行第2列
+  - [付款方户名] '开户行' @ 表格1 第3行第1列
+  - [银行账号] '6217001234567891234' @ 表格1 第4行第4列
+  - [手机号码] '13812345678' @ 表格1 第8行第2列
+[1/4] 处理第 2/4 个文件
+成功: sample_bank_receipt.xlsx -> D:\AI\project\sensitive\output\sample_bank_receipt_redacted.xlsx (脱敏处: 11)
+  - [IBAN账号] 'HD202403260002' @ 电子回单!B3
+  - [付款方户名] '王五' @ 电子回单!B4
+  - [付款方账号] '6227881234567890567' @ 电子回单!D4
+  - [银行账号] '6227881234567890567' @ 电子回单!D4
+  - [付款方户名] '建设银行广州分行' @ 电子回单!B5
+  - [付款方开户行] '建设银行广州分行' @ 电子回单!B5
+  - [银行账号] '440102199001011234' @ 电子回单!D5
+  - [身份证号] '440102199001011234' @ 电子回单!D5
+  - [付款方户名] '开户行' @ 电子回单!A5
+  - [银行账号] '6222031234567893456' @ 电子回单!D6
+  - [手机号码] '13987654321' @ 电子回单!B9
+[2/4] 处理第 3/4 个文件
+失败: sample_bank_receipt.png - PaddleOCR.predict() got an unexpected keyword argument 'cls'
+Traceback (most recent call last):
+  File "D:\AI\project\sensitive\core\redactor.py", line 84, in process_file
+    processor.process(file_path, output_path, log)
+  File "D:\AI\project\sensitive\processors\image_processor.py", line 26, in process
+    img = self._process_image(img, log, '图片')
+  File "D:\AI\project\sensitive\processors\image_processor.py", line 34, in _process_image
+    ocr_results = self.ocr_engine.recognize_from_image(img)
+  File "D:\AI\project\sensitive\core\ocr_engine.py", line 91, in recognize_from_image
+    result = self._ocr.ocr(image, cls=True)
+  File "D:\AI\project\sensitive\.venv_new\lib\site-packages\typing_extensions.py", line 3004, in wrapper
+    return arg(*args, **kwargs)
+  File "D:\AI\project\sensitive\.venv_new\lib\site-packages\paddleocr\_pipelines\ocr.py", line 231, in ocr
+    return self.predict(img, **kwargs)
+TypeError: PaddleOCR.predict() got an unexpected keyword argument 'cls'
+
+[3/4] 处理第 4/4 个文件
+失败: sample_bank_receipt.pdf - PaddleOCR.predict() got an unexpected keyword argument 'cls'
+Traceback (most recent call last):
+  File "D:\AI\project\sensitive\core\redactor.py", line 84, in process_file
+    processor.process(file_path, output_path, log)
+  File "D:\AI\project\sensitive\processors\pdf_processor.py", line 40, in process
+    img = self._process_image(img, log, location_prefix)
+  File "D:\AI\project\sensitive\processors\image_processor.py", line 34, in _process_image
+    ocr_results = self.ocr_engine.recognize_from_image(img)
+  File "D:\AI\project\sensitive\core\ocr_engine.py", line 91, in recognize_from_image
+    result = self._ocr.ocr(image, cls=True)
+  File "D:\AI\project\sensitive\.venv_new\lib\site-packages\typing_extensions.py", line 3004, in wrapper
+    return arg(*args, **kwargs)
+  File "D:\AI\project\sensitive\.venv_new\lib\site-packages\paddleocr\_pipelines\ocr.py", line 231, in ocr
+    return self.predict(img, **kwargs)
+TypeError: PaddleOCR.predict() got an unexpected keyword argument 'cls'
+
+[4/4] 处理完成
+
+集成测试失败！有文件未能成功处理。
