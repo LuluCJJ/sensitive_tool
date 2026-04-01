@@ -84,6 +84,7 @@ class ImageProcessor(BaseProcessor):
                         m.matched_text,
                         f'{location_prefix} OCR文本: {ocr_item.text}',
                         m.match_type,
+                        m.trigger
                     )
 
         # 2. 关键字标签扫描：找到标签后，遮罩其右侧或下方的相邻文本框
@@ -105,6 +106,7 @@ class ImageProcessor(BaseProcessor):
                                 val_item.text,
                                 f'{location_prefix} 标签"{label}"的值',
                                 'keyword',
+                                f'由关键字标签关联: {label}'
                             )
                         break
 
@@ -189,28 +191,39 @@ class ImageProcessor(BaseProcessor):
 
     def _is_label(self, text: str) -> bool:
         """检查文本本身是否是系统里配置的一个规则标签(Key)"""
+        import re
         text_lower = text.strip().lower()
         if not text_lower:
             return False
         for _, _, labels, _ in self.scanner.keywords:
             for lbl in labels:
                 lbl_lower = lbl.strip().lower()
-                # 简单包含判断或被包含判断，防止长短标签相互覆盖
-                if lbl_lower in text_lower or text_lower in lbl_lower:
-                    return True
+                # 如果标签是纯英文，强制词边界，避免 Account 错误匹配到 Beneficiary Account
+                is_pure_english = bool(re.match(r'^[a-z0-9\s/.-]+$', lbl_lower))
+                if is_pure_english:
+                    pattern = r'(?<![a-z0-9])' + re.escape(lbl_lower) + r'(?![a-z0-9])'
+                    if re.search(pattern, text_lower) or text_lower in lbl_lower:
+                        return True
+                else:
+                    # 简单包含判断或被包含判断，防止长短标签相互覆盖
+                    if lbl_lower in text_lower or text_lower in lbl_lower:
+                        return True
         return False
 
     @staticmethod
     def _score_as_account(text: str) -> float:
-        """对文本内容打分，评估其为账号/IBAN的可能性
-
-        Returns:
-            0.0 ~ 1.0 的置信度分数
-        """
+        """对文本内容打分，评估其为账号/IBAN的可能性"""
         import re
         text = text.strip()
         if not text:
             return 0.0
+
+        # 防护：如果是明显的值说明文字或标签属性，惩罚得分
+        text_lower = text.lower()
+        punish_words = ['amount', 'reference', 'ref', 'date', 'name', 'bal', 'balance', 'fee', 'charge']
+        for w in punish_words:
+            if w in text_lower:
+                return 0.0  # 绝对不可能是纯数字账号
 
         # 纯 16-19 位数字 → 银行账号格式
         if re.match(r'^\d{16,19}$', text):

@@ -115,7 +115,7 @@ class BanksTab(ttk.Frame):
                     {
                         "id": "tpl_account_num",
                         "name": "账号(模板)",
-                        "labels": ["Account Number", "Account No", "Account", "Account:"],
+                        "labels": ["Account Number", "Account No", "A/C Number", "A/C No", "A/C"],
                         "action": "redact_value",
                         "enabled": True
                     },

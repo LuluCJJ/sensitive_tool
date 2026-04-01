@@ -15,6 +15,7 @@ class RedactionLogEntry:
     original_text: str
     location: str  # 位置描述，如 "第3段" 或 "Sheet1!B5"
     match_type: str
+    trigger: str = ''  # 新增字段：具体是由哪个正则表达式或标签触发的
 
 
 @dataclass

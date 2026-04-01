@@ -26,7 +26,8 @@ class BaseProcessor(ABC):
         pass
 
     def _add_log_entry(self, log: RedactionLog, rule_id: str, rule_name: str,
-                       original_text: str, location: str, match_type: str):
+                       original_text: str, location: str, match_type: str,
+                       trigger: str = ''):
         """添加一条脱敏日志"""
         log.add_entry(RedactionLogEntry(
             rule_id=rule_id,
@@ -34,4 +35,5 @@ class BaseProcessor(ABC):
             original_text=original_text,
             location=location,
             match_type=match_type,
+            trigger=trigger,
         ))

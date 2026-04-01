@@ -109,10 +109,18 @@ class LogTab(ttk.Frame):
                     f"  错误: {file_log['error_message']}\n")
 
             for entry in file_log.get('entries', []):
+                rule_name = entry.get('rule_name', '')
+                orig_txt = entry.get('original_text', '')
+                loc = entry.get('location', '')
+                trigger = entry.get('trigger', '')
+                
                 self.detail_text.insert(tk.END,
-                    f"  · [{entry['rule_name']}] "
-                    f"\"{entry['original_text']}\" "
-                    f"@ {entry['location']}\n")
+                    f"  · [{rule_name}] "
+                    f"\"{orig_txt}\" "
+                    f"@ {loc}")
+                if trigger:
+                    self.detail_text.insert(tk.END, f"  <= ({trigger})")
+                self.detail_text.insert(tk.END, '\n')
             self.detail_text.insert(tk.END, '\n')
 
         self.detail_text.configure(state=tk.DISABLED)

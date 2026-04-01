@@ -120,12 +120,7 @@ class RulesTab(ttk.Frame):
 
         mode_frame = ttk.Frame(self._whitelist_frame)
         mode_frame.pack(fill=X, pady=(0, 5))
-        self.whitelist_mode_var = tk.BooleanVar(value=False)
-        self._whitelist_mode_chk = ttk.Checkbutton(
-            mode_frame, text=t('rules_whitelist_mode_tip'), 
-            variable=self.whitelist_mode_var, style='warning.TCheckbutton'
-        )
-        self._whitelist_mode_chk.pack(side=LEFT)
+        # 移除 whitelist_mode_var 开关，现在默认全开启模式以简化逻辑
 
         cols_w = ('value', 'note', 'is_regex', 'enabled')
         self.whitelist_tree = ttk.Treeview(self._whitelist_frame, columns=cols_w, show='headings', height=5)
@@ -179,8 +174,8 @@ class RulesTab(ttk.Frame):
                 '✓' if k.get('enabled', True) else '✗'
             ))
 
-        # 加载账号白名单（始终是全局的）
-        self.whitelist_mode_var.set(rules.get('use_whitelist_mode', True)) # 默认使用此模式
+        # 加载账号列表
+        # (移除 whitelist_mode_var 设置)
         for item in self.whitelist_tree.get_children():
             self.whitelist_tree.delete(item)
         for w in rules.get('account_whitelist', []):
@@ -224,9 +219,13 @@ class RulesTab(ttk.Frame):
             if 'patterns' in rules:
                 del rules['patterns'] # 清理全局旧模式
 
-        # 白名单全局保存
+        # 精确名单全局保存
         rules['replacement'] = self.replacement_var.get() or '****'
-        rules['use_whitelist_mode'] = self.whitelist_mode_var.get()
+        # 强制启用统一模式
+        rules['use_whitelist_mode'] = True
+        if 'patterns' in rules:
+            del rules['patterns']
+            
         rules['account_whitelist'] = []
         for item in self.whitelist_tree.get_children():
             values = self.whitelist_tree.item(item, 'values')
