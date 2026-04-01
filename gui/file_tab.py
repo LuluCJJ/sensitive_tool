@@ -6,7 +6,9 @@ from tkinter import filedialog, messagebox
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 
-from config import SUPPORTED_EXTENSIONS, OUTPUT_DIR
+from config import SUPPORTED_EXTENSIONS, OUTPUT_DIR, RULES_FILE
+from core.i18n import t
+import json
 
 
 class FileTab(ttk.Frame):
@@ -20,41 +22,60 @@ class FileTab(ttk.Frame):
         self._build_ui()
 
     def _build_ui(self):
-        # ---- 顶部：文件选择区 ----
-        select_frame = ttk.LabelFrame(self, text='文件选择')
-        select_frame.pack(fill=X, pady=(0, 10))
+        # ---- 顶部工具栏：银行选择 ----
+        toolbar = ttk.Frame(self)
+        toolbar.pack(fill=X, pady=(0, 8))
 
-        btn_frame = ttk.Frame(select_frame)
+        self._bank_label = ttk.Label(toolbar, text=t('file_bank_label'))
+        self._bank_label.pack(side=LEFT, padx=(0, 5))
+
+        self._bank_var = tk.StringVar()
+        self._bank_combo = ttk.Combobox(
+            toolbar, textvariable=self._bank_var,
+            state='readonly', width=24,
+        )
+        self._bank_combo.pack(side=LEFT)
+        self._refresh_banks()
+
+        # ---- 顶部：文件选择区 ----
+        self._select_frame = ttk.LabelFrame(self, text=t('file_add_btn'))
+        self._select_frame.pack(fill=X, pady=(0, 10))
+
+        btn_frame = ttk.Frame(self._select_frame)
         btn_frame.pack(fill=X)
 
-        ttk.Button(btn_frame, text='选择文件', style='primary.TButton',
-                   command=self._select_files).pack(side=LEFT, padx=(0, 5))
-        ttk.Button(btn_frame, text='清空列表', style='secondary.TButton',
-                   command=self._clear_files).pack(side=LEFT, padx=(0, 5))
+        self._add_btn = ttk.Button(btn_frame, text=t('file_add_btn'),
+                                   style='primary.TButton',
+                                   command=self._select_files)
+        self._add_btn.pack(side=LEFT, padx=(0, 5))
+        self._clear_btn = ttk.Button(btn_frame, text=t('file_clear_btn'),
+                                     style='secondary.TButton',
+                                     command=self._clear_files)
+        self._clear_btn.pack(side=LEFT, padx=(0, 5))
 
         ext_str = ', '.join(SUPPORTED_EXTENSIONS.keys())
-        ttk.Label(select_frame, text=f'支持格式: {ext_str}',
+        ttk.Label(self._select_frame, text=f'支持格式: {ext_str}',
                   font=('', 9), foreground='gray').pack(anchor=W, pady=(5, 0))
 
         # ---- 中部：文件列表 ----
-        list_frame = ttk.LabelFrame(self, text='文件列表')
-        list_frame.pack(fill=BOTH, expand=True, pady=(0, 10))
+        self._list_frame = ttk.LabelFrame(self, text=t('file_col_name'))
+        self._list_frame.pack(fill=BOTH, expand=True, pady=(0, 10))
 
-        # 树形列表
         columns = ('filename', 'type', 'status')
-        self.tree = ttk.Treeview(list_frame, columns=columns, show='headings',
-                                 height=10, style='info.Treeview')
-        self.tree.heading('filename', text='文件名')
-        self.tree.heading('type', text='类型')
-        self.tree.heading('status', text='状态')
+        self.tree = ttk.Treeview(self._list_frame, columns=columns,
+                                 show='headings', height=10,
+                                 style='info.Treeview')
+        self._col_name = ttk.Label()  # placeholder for heading refs
+        self.tree.heading('filename', text=t('file_col_name'))
+        self.tree.heading('type', text=t('file_col_type'))
+        self.tree.heading('status', text=t('file_col_status'))
         self.tree.column('filename', width=350)
         self.tree.column('type', width=80, anchor=CENTER)
         self.tree.column('status', width=120, anchor=CENTER)
 
-        scrollbar = ttk.Scrollbar(list_frame, orient=VERTICAL,
+        scrollbar = ttk.Scrollbar(self._list_frame, orient=VERTICAL,
                                   command=self.tree.yview)
         self.tree.configure(yscrollcommand=scrollbar.set)
-
         self.tree.pack(side=LEFT, fill=BOTH, expand=True)
         scrollbar.pack(side=RIGHT, fill=Y)
 
@@ -63,23 +84,66 @@ class FileTab(ttk.Frame):
         action_frame.pack(fill=X)
 
         self.progress_var = tk.DoubleVar(value=0)
-        self.progress_bar = ttk.Progressbar(action_frame, variable=self.progress_var,
-                                            maximum=100, style='success.Striped.Horizontal.TProgressbar')
+        self.progress_bar = ttk.Progressbar(
+            action_frame, variable=self.progress_var,
+            maximum=100, style='success.Striped.Horizontal.TProgressbar')
         self.progress_bar.pack(fill=X, pady=(0, 8))
 
-        self.status_label = ttk.Label(action_frame, text='就绪',
+        self.status_label = ttk.Label(action_frame, text=t('file_status_ready'),
                                       font=('', 9), foreground='gray')
         self.status_label.pack(side=LEFT)
 
         btn_right = ttk.Frame(action_frame)
         btn_right.pack(side=RIGHT)
 
-        ttk.Button(btn_right, text='打开输出目录', style='info.TButton',
-                   command=self._open_output_dir).pack(side=LEFT, padx=(0, 5))
-        self.start_btn = ttk.Button(btn_right, text='开始脱敏',
-                                    style='success.TButton',
-                                    command=self._start_processing)
+        self._open_output_btn = ttk.Button(
+            btn_right, text=t('file_open_output'),
+            style='info.TButton', command=self._open_output_dir)
+        self._open_output_btn.pack(side=LEFT, padx=(0, 5))
+        self.start_btn = ttk.Button(
+            btn_right, text=t('file_process_btn'),
+            style='success.TButton', command=self._start_processing)
         self.start_btn.pack(side=LEFT)
+
+    def _refresh_banks(self):
+        """从 rules.json 读取银行列表，刷新下拉框"""
+        banks = [t('file_bank_all')]
+        try:
+            with open(RULES_FILE, 'r', encoding='utf-8') as f:
+                rules = json.load(f)
+            for b in rules.get('banks', []):
+                if b.get('enabled', True):
+                    banks.append(f"{b['name']}  [{b['id']}]")
+        except Exception:
+            pass
+        current = self._bank_var.get()
+        self._bank_combo['values'] = banks
+        # 保持已选项，否则回到第一项
+        if current in banks:
+            self._bank_var.set(current)
+        else:
+            self._bank_var.set(banks[0])
+
+    def _get_selected_bank_id(self) -> str | None:
+        """解析当前选中的银行 ID，通用返回 None"""
+        val = self._bank_var.get()
+        if not val or '[' not in val:
+            return None
+        # 格式: "银行名称  [bank_id]"
+        return val.split('[')[-1].rstrip(']').strip()
+
+    def refresh_lang(self):
+        """切换语言后刷新 UI 文字"""
+        self._bank_label.config(text=t('file_bank_label'))
+        self._add_btn.config(text=t('file_add_btn'))
+        self._clear_btn.config(text=t('file_clear_btn'))
+        self.tree.heading('filename', text=t('file_col_name'))
+        self.tree.heading('type', text=t('file_col_type'))
+        self.tree.heading('status', text=t('file_col_status'))
+        self.status_label.config(text=t('file_status_ready'))
+        self._open_output_btn.config(text=t('file_open_output'))
+        self.start_btn.config(text=t('file_process_btn'))
+        self._refresh_banks()
 
     def _select_files(self):
         filetypes = [
@@ -107,7 +171,7 @@ class FileTab(ttk.Frame):
         for item in self.tree.get_children():
             self.tree.delete(item)
         self.progress_var.set(0)
-        self.status_label.configure(text='就绪')
+        self.status_label.configure(text=t('file_status_ready'))
 
     def _start_processing(self):
         if self._processing:
@@ -118,7 +182,10 @@ class FileTab(ttk.Frame):
 
         self._processing = True
         self.start_btn.configure(state=DISABLED)
-        self.redactor.reload_rules()
+
+        # 按选中银行重载规则
+        bank_id = self._get_selected_bank_id()
+        self.redactor.reload_rules(bank_id=bank_id)
 
         # 在后台线程处理
         thread = threading.Thread(target=self._process_thread, daemon=True)
@@ -130,15 +197,13 @@ class FileTab(ttk.Frame):
         items = list(self.tree.get_children())
 
         for i, (file_path, item) in enumerate(zip(self.file_paths, items)):
-            # 更新状态
             self.after(0, lambda it=item: self.tree.set(it, 'status', '处理中...'))
             self.after(0, lambda v=(i / total * 100): self.progress_var.set(v))
-            self.after(0, lambda t=f'正在处理 {i+1}/{total}...':
-                       self.status_label.configure(text=t))
+            self.after(0, lambda txt=f'正在处理 {i+1}/{total}...':
+                       self.status_label.configure(text=txt))
 
             log = self.redactor.process_file(file_path)
 
-            # 更新结果
             if log.status == 'success':
                 status_text = f'完成 (脱敏{log.redaction_count}处)'
             else:
@@ -147,10 +212,8 @@ class FileTab(ttk.Frame):
             self.after(0, lambda it=item, s=status_text:
                        self.tree.set(it, 'status', s))
 
-        # 保存日志
-        log_path = self.redactor.save_logs()
+        self.redactor.save_logs()
 
-        # 完成
         self.after(0, lambda: self.progress_var.set(100))
         self.after(0, lambda: self.status_label.configure(
             text=f'处理完成！共 {total} 个文件'))

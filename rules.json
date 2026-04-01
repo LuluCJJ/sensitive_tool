@@ -40,38 +40,67 @@
     {
       "id": "payer_name",
       "name": "付款方户名",
-      "labels": ["付款人", "付款方", "汇款人", "付款户名", "付款人名称", "付款方名称"],
+      "labels": [
+        "付款人",
+        "付款方",
+        "汇款人",
+        "付款户名",
+        "付款人名称",
+        "付款方名称"
+      ],
       "action": "redact_value",
       "enabled": true
     },
     {
       "id": "payer_account",
       "name": "付款方账号",
-      "labels": ["付款账号", "付款方账号", "汇款账号", "付款人账号"],
+      "labels": [
+        "付款账号",
+        "付款方账号",
+        "汇款账号",
+        "付款人账号"
+      ],
       "action": "redact_value",
       "enabled": true
     },
     {
       "id": "payer_bank",
       "name": "付款方开户行",
-      "labels": ["付款行", "付款方开户行", "汇款行", "付款人开户行"],
+      "labels": [
+        "付款行",
+        "付款方开户行",
+        "汇款行",
+        "付款人开户行"
+      ],
       "action": "redact_value",
       "enabled": true
     },
     {
       "id": "payee_name",
       "name": "收款方户名",
-      "labels": ["收款人", "收款方", "收款户名", "收款人名称", "收款方名称"],
+      "labels": [
+        "收款人",
+        "收款方",
+        "收款户名",
+        "收款人名称",
+        "收款方名称"
+      ],
       "action": "redact_value",
       "enabled": false
     },
     {
       "id": "payee_account",
       "name": "收款方账号",
-      "labels": ["收款账号", "收款方账号", "收款人账号"],
+      "labels": [
+        "收款账号",
+        "收款方账号",
+        "收款人账号"
+      ],
       "action": "redact_value",
       "enabled": false
     }
   ],
-  "replacement": "****"
+  "replacement": "****",
+  "use_whitelist_mode": false,
+  "account_whitelist": []
 }

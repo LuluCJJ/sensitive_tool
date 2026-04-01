@@ -36,15 +36,26 @@ class KeywordScanMatch:
 class Scanner:
     """敏感信息扫描器"""
 
-    def __init__(self, rules_file: str = None):
+    def __init__(self, rules_file: str = None, bank_id: str = None):
         self.rules_file = rules_file or RULES_FILE
+        self.bank_id = bank_id  # None = 全局规则
         self.patterns = []   # [(id, name, compiled_regex)]
         self.keywords = []   # [(id, name, labels, action)]
         self.replacement = '****'
+        self.use_whitelist_mode = False
+        self.account_whitelist = []  # [(value, note)]
         self.load_rules()
 
-    def load_rules(self):
-        """从 rules.json 加载规则"""
+    def load_rules(self, bank_id: str = None):
+        """从 rules.json 加载规则
+
+        Args:
+            bank_id: 指定银行时，在全局规则基础上叠加该银行的私有额外规则。
+            不传或传 None 则仅加载全局规则。
+        """
+        if bank_id is not None:
+            self.bank_id = bank_id
+
         try:
             with open(self.rules_file, 'r', encoding='utf-8') as f:
                 rules = json.load(f)
@@ -52,10 +63,39 @@ class Scanner:
             rules = {'patterns': [], 'keywords': [], 'replacement': '****'}
 
         self.replacement = rules.get('replacement', '****')
+        self.use_whitelist_mode = rules.get('use_whitelist_mode', False)
+
+        # 加载账号白名单
+        self.account_whitelist = [
+            (item['value'], item.get('note', ''))
+            for item in rules.get('account_whitelist', [])
+            if item.get('enabled', True) and item.get('value', '').strip()
+        ]
+
+        # 确定基础规则櫻
+        base_patterns = rules.get('patterns', []) if not self.use_whitelist_mode else []
+        base_keywords = rules.get('keywords', [])
+
+        # 如果指定了银行，叠加该银行的私有额外规则
+        if self.bank_id:
+            bank_data = next(
+                (b for b in rules.get('banks', [])
+                 if b['id'] == self.bank_id and b.get('enabled', True)),
+                None
+            )
+            if bank_data:
+                disabled = set(bank_data.get('disabled_global_rules', []))
+                base_patterns = [p for p in base_patterns
+                                 if p['id'] not in disabled]
+                base_keywords = [k for k in base_keywords
+                                 if k['id'] not in disabled]
+                # 叠加银行私有规则
+                base_patterns += bank_data.get('extra_patterns', [])
+                base_keywords += bank_data.get('extra_keywords', [])
 
         # 编译正则模式
         self.patterns = []
-        for p in rules.get('patterns', []):
+        for p in base_patterns:
             if not p.get('enabled', True):
                 continue
             try:
@@ -66,7 +106,7 @@ class Scanner:
 
         # 加载关键字标签
         self.keywords = []
-        for k in rules.get('keywords', []):
+        for k in base_keywords:
             if not k.get('enabled', True):
                 continue
             self.keywords.append((
@@ -79,30 +119,44 @@ class Scanner:
     def scan_text(self, text: str) -> list[ScanMatch]:
         """扫描纯文本，返回所有匹配结果
 
-        Args:
-            text: 待扫描文本
-
-        Returns:
-            匹配结果列表
+        白名单模式：只精确匹配 account_whitelist 中的账号，不使用正则。
+        正则模式：按正则模式 + 关键字标签扫描。
         """
         matches = []
 
-        # 1. 正则模式扫描
-        for rule_id, rule_name, pattern in self.patterns:
-            for m in pattern.finditer(text):
-                matches.append(ScanMatch(
-                    rule_id=rule_id,
-                    rule_name=rule_name,
-                    matched_text=m.group(),
-                    start=m.start(),
-                    end=m.end(),
-                    match_type='pattern',
-                ))
+        if self.use_whitelist_mode:
+            # ---- 白名单精确匹配模式 ----
+            for value, note in self.account_whitelist:
+                start = 0
+                while True:
+                    idx = text.find(value, start)
+                    if idx == -1:
+                        break
+                    matches.append(ScanMatch(
+                        rule_id='whitelist',
+                        rule_name=f'账号白名单({note})' if note else '账号白名单',
+                        matched_text=value,
+                        start=idx,
+                        end=idx + len(value),
+                        match_type='whitelist',
+                    ))
+                    start = idx + len(value)
+        else:
+            # ---- 正则模式扫描 ----
+            for rule_id, rule_name, pattern in self.patterns:
+                for m in pattern.finditer(text):
+                    matches.append(ScanMatch(
+                        rule_id=rule_id,
+                        rule_name=rule_name,
+                        matched_text=m.group(),
+                        start=m.start(),
+                        end=m.end(),
+                        match_type='pattern',
+                    ))
 
-        # 2. 关键字标签扫描（在纯文本中查找 "标签：值" 或 "标签:值" 模式）
+        # 关键字标签扫描（两种模式都执行）
         for rule_id, rule_name, labels, action in self.keywords:
             for label in labels:
-                # 匹配 "标签：值" 或 "标签: 值"，值为非空白字符串
                 label_pattern = re.compile(
                     re.escape(label) + r'[：:\s]*([^\s,，;；\n]+)',
                     re.UNICODE

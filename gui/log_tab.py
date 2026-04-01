@@ -7,6 +7,7 @@ import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 
 from config import LOG_DIR
+from core.i18n import t
 
 
 class LogTab(ttk.Frame):
@@ -22,21 +23,25 @@ class LogTab(ttk.Frame):
         top_frame = ttk.Frame(self)
         top_frame.pack(fill=X, pady=(0, 10))
 
-        ttk.Button(top_frame, text='刷新', style='info.TButton',
-                   command=self._refresh).pack(side=LEFT, padx=(0, 5))
-        ttk.Button(top_frame, text='导出选中日志', style='secondary.TButton',
-                   command=self._export_log).pack(side=LEFT)
+        self._refresh_btn = ttk.Button(top_frame, text=t('log_refresh_btn'),
+                                        style='info.TButton',
+                                        command=self._refresh)
+        self._refresh_btn.pack(side=LEFT, padx=(0, 5))
+        self._export_btn = ttk.Button(top_frame, text=t('log_save_btn'),
+                                      style='secondary.TButton',
+                                      command=self._export_log)
+        self._export_btn.pack(side=LEFT)
 
         # 中部：日志列表
-        list_frame = ttk.LabelFrame(self, text='历史脱敏记录')
-        list_frame.pack(fill=BOTH, expand=True, pady=(0, 10))
+        self._list_frame = ttk.LabelFrame(self, text='历史脱敏记录')
+        self._list_frame.pack(fill=BOTH, expand=True, pady=(0, 10))
 
         cols = ('time', 'files', 'redactions')
-        self.log_tree = ttk.Treeview(list_frame, columns=cols,
+        self.log_tree = ttk.Treeview(self._list_frame, columns=cols,
                                       show='headings', height=6)
-        self.log_tree.heading('time', text='时间')
-        self.log_tree.heading('files', text='文件数')
-        self.log_tree.heading('redactions', text='脱敏总数')
+        self.log_tree.heading('time', text=t('log_col_time'))
+        self.log_tree.heading('files', text=t('file_col_name'))
+        self.log_tree.heading('redactions', text=t('log_col_count'))
         self.log_tree.column('time', width=180)
         self.log_tree.column('files', width=80, anchor=CENTER)
         self.log_tree.column('redactions', width=80, anchor=CENTER)
@@ -137,3 +142,11 @@ class LogTab(ttk.Frame):
     def on_tab_selected(self):
         """标签页被选中时自动刷新"""
         self._refresh()
+
+    def refresh_lang(self):
+        """切换语言后刷新 UI 文字"""
+        self._refresh_btn.config(text=t('log_refresh_btn'))
+        self._export_btn.config(text=t('log_save_btn'))
+        self.log_tree.heading('time', text=t('log_col_time'))
+        self.log_tree.heading('files', text=t('file_col_name'))
+        self.log_tree.heading('redactions', text=t('log_col_count'))

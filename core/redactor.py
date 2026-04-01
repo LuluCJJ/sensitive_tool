@@ -35,9 +35,13 @@ class Redactor:
 
         os.makedirs(self.output_dir, exist_ok=True)
 
-    def reload_rules(self):
-        """重新加载脱敏规则"""
-        self.scanner.load_rules()
+    def reload_rules(self, bank_id: str = None):
+        """重新加载脱敏规则
+
+        Args:
+            bank_id: 指定银行 ID 时，在全局规则基础上叠加该银行的私有规则。
+        """
+        self.scanner.load_rules(bank_id=bank_id)
 
     def process_file(self, file_path: str,
                      progress_callback: Optional[Callable] = None) -> RedactionLog:

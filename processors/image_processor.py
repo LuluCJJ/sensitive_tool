@@ -111,46 +111,104 @@ class ImageProcessor(BaseProcessor):
     def _find_adjacent_value(self, label_item: OCRResult,
                              all_items: list[OCRResult],
                              label_index: int) -> list[OCRResult]:
-        """找到标签文本框右侧或下方的相邻值文本框
+        """找到标签文本框关联的值文本框（三层智能策略）
 
         策略：
-        - 优先找同一行中，在标签右侧的文本框
-        - 如果没有，则找正下方的文本框
+        Layer 1 - 方向候选收集：收集右侧（同行）和正下方的所有候选框
+        Layer 2 - 数字置信度过滤：对每个候选框内容打分，优先选数字/IBAN格式
+        Layer 3 - 距离加权：同分情况下优先最近的候选框
         """
-        result = []
         label_y_center = (label_item.y_min + label_item.y_max) / 2
         label_height = label_item.y_max - label_item.y_min
         y_threshold = label_height * 0.6  # 同行判定容差
 
-        # 找同行右侧
-        right_candidates = []
+        # Layer 1: 分方向收集候选框
+        right_candidates = []  # [(distance, score, item)]
+        below_candidates = []  # [(distance, score, item)]
+
         for j, item in enumerate(all_items):
             if j == label_index:
                 continue
             item_y_center = (item.y_min + item.y_max) / 2
-            # 在同一行（y 坐标接近）且在右侧
+            score = self._score_as_account(item.text)
+
+            # 右侧：同行 + 在右边
             if (abs(item_y_center - label_y_center) < y_threshold
                     and item.x_min > label_item.x_max - 10):
-                right_candidates.append((item.x_min, item))
+                dist = item.x_min - label_item.x_max
+                right_candidates.append((dist, score, item))
 
-        if right_candidates:
-            # 取最近的右侧文本框
-            right_candidates.sort(key=lambda x: x[0])
-            result.append(right_candidates[0][1])
-        else:
-            # 没有右侧的，找正下方的
-            below_candidates = []
-            for j, item in enumerate(all_items):
-                if j == label_index:
-                    continue
+            # 下方：x 有重叠 + 在下面
+            else:
                 x_overlap = (min(item.x_max, label_item.x_max) -
                              max(item.x_min, label_item.x_min))
-                # x 有重叠且在下方
                 if x_overlap > 0 and item.y_min > label_item.y_min:
-                    below_candidates.append((item.y_min, item))
+                    dist = item.y_min - label_item.y_max
+                    below_candidates.append((dist, score, item))
 
-            if below_candidates:
-                below_candidates.sort(key=lambda x: x[0])
-                result.append(below_candidates[0][1])
+        # Layer 2 + 3: 按分数降序、距离升序排列，取最优
+        def best(candidates):
+            if not candidates:
+                return None
+            # score 越高越好，distance 越小越好
+            candidates.sort(key=lambda x: (-x[1], x[0]))
+            return candidates[0][2]
 
-        return result
+        best_right = best(right_candidates)
+        best_below = best(below_candidates)
+
+        # 决策：右侧分数 >= 0.5 优先选右侧，否则选下方（如果下方分数更高）
+        if best_right is not None:
+            right_score = right_candidates[0][1] if right_candidates else 0
+            below_score = below_candidates[0][1] if below_candidates else 0
+            # 右侧有高置信度数字，或右侧比下方分更高/相当 → 选右侧
+            if right_score >= 0.5 or right_score >= below_score:
+                return [best_right]
+            elif best_below is not None:
+                return [best_below]
+            else:
+                return [best_right]
+        elif best_below is not None:
+            return [best_below]
+
+        return []
+
+    @staticmethod
+    def _score_as_account(text: str) -> float:
+        """对文本内容打分，评估其为账号/IBAN的可能性
+
+        Returns:
+            0.0 ~ 1.0 的置信度分数
+        """
+        import re
+        text = text.strip()
+        if not text:
+            return 0.0
+
+        # 纯 16-19 位数字 → 银行账号格式
+        if re.match(r'^\d{16,19}$', text):
+            return 1.0
+
+        # IBAN 格式：2字母 + 2数字 + 4-30位字母数字
+        if re.match(r'^[A-Z]{2}\d{2}[A-Z0-9]{4,30}$', text):
+            return 1.0
+
+        # 含有 4 位以上连续数字（可能是账号片段）
+        digits = re.findall(r'\d+', text)
+        max_digit_run = max((len(d) for d in digits), default=0)
+        if max_digit_run >= 8:
+            return 0.8
+        if max_digit_run >= 4:
+            return 0.6
+
+        # 全部是数字（但位数不够16）
+        if text.isdigit():
+            return 0.4
+
+        # 混合文本（含少量数字）
+        digit_ratio = sum(c.isdigit() for c in text) / len(text)
+        if digit_ratio > 0.3:
+            return 0.3
+
+        # 纯中文 / 纯英文 / 其他
+        return 0.1
