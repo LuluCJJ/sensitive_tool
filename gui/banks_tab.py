@@ -111,12 +111,14 @@ class BanksTab(ttk.Frame):
             # 如果是全新银行（没有历史配置记录），则自动注入默认的关键字标签加速启动
             extra_keywords = old.get('extra_keywords')
             if extra_keywords is None:
+                # 默认只放最基础的两个模板，且保持开启，方便业务快速使用
                 extra_keywords = [
                     {
                         "id": "tpl_account_num",
                         "name": "账号(模板)",
                         "labels": ["Account Number", "Account No", "A/C Number", "A/C No", "A/C"],
                         "action": "redact_value",
+                        "case_sensitive": False,
                         "enabled": True
                     },
                     {
@@ -124,6 +126,7 @@ class BanksTab(ttk.Frame):
                         "name": "IBAN(模板)",
                         "labels": ["IBAN", "IBAN:"],
                         "action": "redact_value",
+                        "case_sensitive": False,
                         "enabled": True
                     }
                 ]

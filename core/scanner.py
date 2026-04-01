@@ -93,7 +93,6 @@ class Scanner:
         # 编译正则模式
         # 移除 patterns 正则加载，现在全部统一在 account_whitelist 中处理
 
-        # 加载关键字标签
         self.keywords = []
         for k in base_keywords:
             if not k.get('enabled', True):
@@ -103,6 +102,7 @@ class Scanner:
                 k['name'],
                 k.get('labels', []),
                 k.get('action', 'redact_value'),
+                k.get('case_sensitive', False), # 新增：大小写敏感
             ))
 
     def scan_text(self, text: str) -> list[ScanMatch]:
@@ -149,10 +149,8 @@ class Scanner:
                     start = idx + len(value)
 
         # 关键字标签扫描
-        for rule_id, rule_name, labels, action in self.keywords:
+        for rule_id, rule_name, labels, action, case_sens in self.keywords:
             for label in labels:
-                # 严谨的边界匹配：对于全英文标签，强制两边加词边界限制
-                # 以避免 "Account" 去匹配 "Beneficiary Account"
                 is_pure_english = bool(re.match(r'^[A-Za-z0-9\s/.-]+$', label))
                 if is_pure_english:
                     # 前后均不得跟其他英文字母（即词边界保护）

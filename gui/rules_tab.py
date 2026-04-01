@@ -89,15 +89,17 @@ class RulesTab(ttk.Frame):
         self._keyword_frame = ttk.LabelFrame(main_container, text=t('rules_keyword_section'))
         self._keyword_frame.pack(fill=X, pady=(0, 10))
 
-        cols_k = ('id', 'name', 'labels', 'enabled')
+        cols_k = ('id', 'name', 'labels', 'case_sensitive', 'enabled')
         self.keyword_tree = ttk.Treeview(self._keyword_frame, columns=cols_k, show='headings', height=6)
         self.keyword_tree.heading('id', text=t('col_id'))
         self.keyword_tree.heading('name', text=t('col_name'))
         self.keyword_tree.heading('labels', text=t('col_labels'))
+        self.keyword_tree.heading('case_sensitive', text=t('col_case_sensitive'))
         self.keyword_tree.heading('enabled', text=t('col_enabled'))
         self.keyword_tree.column('id', width=100)
         self.keyword_tree.column('name', width=120)
-        self.keyword_tree.column('labels', width=300)
+        self.keyword_tree.column('labels', width=250)
+        self.keyword_tree.column('case_sensitive', width=60, anchor=CENTER)
         self.keyword_tree.column('enabled', width=60, anchor=CENTER)
         self.keyword_tree.pack(fill=X, expand=True, pady=(0, 5))
 
@@ -171,6 +173,7 @@ class RulesTab(ttk.Frame):
             labels_str = ', '.join(k.get('labels', []))
             self.keyword_tree.insert('', END, values=(
                 k.get('id', ''), k.get('name', ''), labels_str,
+                '✓' if k.get('case_sensitive', False) else '', # 大小写敏感
                 '✓' if k.get('enabled', True) else '✗'
             ))
 
@@ -203,7 +206,8 @@ class RulesTab(ttk.Frame):
             ui_keywords.append({
                 'id': values[0], 'name': values[1],
                 'labels': labels, 'action': 'redact_value',
-                'enabled': values[3] == '✓',
+                'case_sensitive': values[3] == '✓',
+                'enabled': values[4] == '✓',
             })
 
         if self._current_bank_id:
@@ -256,7 +260,7 @@ class RulesTab(ttk.Frame):
     def _keyword_dialog(self, title, item=None, values=None):
         dialog = tk.Toplevel(self)
         dialog.title(title)
-        dialog.geometry('450x220')
+        dialog.geometry('450x260')
         dialog.transient(self)
         dialog.grab_set()
 
@@ -275,6 +279,9 @@ class RulesTab(ttk.Frame):
         labels_var = tk.StringVar(value=values[2] if values else '')
         ttk.Entry(frame, textvariable=labels_var).grid(row=2, column=1, sticky=EW, pady=3)
         ttk.Label(frame, text='多个标签用逗号分隔', font=('', 8), foreground='gray').grid(row=3, column=1, sticky=W)
+        
+        case_sens_var = tk.BooleanVar(value=(values[3] == '✓') if values else False)
+        ttk.Checkbutton(frame, text=t('col_case_sensitive'), variable=case_sens_var).grid(row=4, column=1, sticky=W, pady=5)
 
         frame.columnconfigure(1, weight=1)
 
@@ -282,7 +289,11 @@ class RulesTab(ttk.Frame):
             if not id_var.get() or not name_var.get() or not labels_var.get():
                 messagebox.showwarning('提示', t('msg_empty_field'))
                 return
-            new_values = (id_var.get(), name_var.get(), labels_var.get(), values[3] if values else '✓')
+            new_values = (
+                id_var.get(), name_var.get(), labels_var.get(), 
+                '✓' if case_sens_var.get() else '', 
+                values[4] if values else '✓'
+            )
             if item:
                 self.keyword_tree.item(item, values=new_values)
             else:
@@ -290,7 +301,7 @@ class RulesTab(ttk.Frame):
             dialog.destroy()
 
         ttk.Button(frame, text=t('btn_ok'), style='success.TButton',
-                   command=save).grid(row=4, column=1, sticky=E, pady=(10, 0))
+                   command=save).grid(row=5, column=1, sticky=E, pady=(10, 0))
 
     def _delete_keyword(self):
         selected = self.keyword_tree.selection()
@@ -302,7 +313,7 @@ class RulesTab(ttk.Frame):
         if not selected:
             return
         values = list(self.keyword_tree.item(selected[0], 'values'))
-        values[3] = '✗' if values[3] == '✓' else '✓'
+        values[4] = '✗' if values[4] == '✓' else '✓'
         self.keyword_tree.item(selected[0], values=values)
 
     # ---- 账号/正则白名单操作 ----
@@ -424,6 +435,7 @@ class RulesTab(ttk.Frame):
         self.keyword_tree.heading('id', text=t('col_id'))
         self.keyword_tree.heading('name', text=t('col_name'))
         self.keyword_tree.heading('labels', text=t('col_labels'))
+        self.keyword_tree.heading('case_sensitive', text=t('col_case_sensitive'))
         self.keyword_tree.heading('enabled', text=t('col_enabled'))
         self._btn_k_add.config(text=t('btn_add'))
         self._btn_k_edit.config(text=t('btn_edit'))

@@ -87,28 +87,44 @@ class ImageProcessor(BaseProcessor):
                         m.trigger
                     )
 
-        # 2. 关键字标签扫描：找到标签后，遮罩其右侧或下方的相邻文本框
+        # 2. 关键字标签扫描：找到标签后，遮罩其右侧或下方的相邻实体
+        import re
         for i, ocr_item in enumerate(ocr_results):
             text = ocr_item.text.strip()
-            for rule_id, rule_name, labels, action in self.scanner.keywords:
+            # 遍历所有关键字规则
+            for rule_id, rule_name, labels, action, case_sens in self.scanner.keywords:
+                matched_label = None
                 for label in labels:
-                    if label in text:
-                        # 找到标签，查找相邻的值文本框
-                        value_items = self._find_adjacent_value(
-                            ocr_item, ocr_results, i)
-                        for val_item in value_items:
-                            mask_regions.append((
-                                val_item.x_min, val_item.y_min,
-                                val_item.x_max, val_item.y_max
-                            ))
-                            self._add_log_entry(
-                                log, rule_id, rule_name,
-                                val_item.text,
-                                f'{location_prefix} 标签"{label}"的值',
-                                'keyword',
-                                f'由关键字标签关联: {label}'
-                            )
+                    if not label.strip(): continue
+                    
+                    flags = 0 if case_sens else re.IGNORECASE
+                    is_pure_eng = bool(re.match(r'^[a-zA-Z0-9\s.-]+$', label))
+                    
+                    if is_pure_eng:
+                        pattern = re.compile(r'(?<![a-zA-Z0-9])' + re.escape(label) + r'(?![a-zA-Z0-9])', flags)
+                    else:
+                        pattern = re.compile(re.escape(label), flags)
+                        
+                    if pattern.search(text):
+                        matched_label = label
                         break
+                
+                if matched_label:
+                    # 触发成功，寻找邻近值
+                    value_items = self._find_adjacent_value(ocr_item, ocr_results, i)
+                    for val_item in value_items:
+                        mask_regions.append((
+                            val_item.x_min, val_item.y_min,
+                            val_item.x_max, val_item.y_max
+                        ))
+                        self._add_log_entry(
+                            log, rule_id, rule_name,
+                            val_item.text,
+                            f'{location_prefix} 标签"{matched_label}"的值',
+                            'keyword',
+                            f'由关键字标签关联: {matched_label}'
+                        )
+                    break # 找到第一个匹配的规则标签即跳过本文字框，防止重复打码同个值
 
         return mask_regions
 
@@ -125,89 +141,90 @@ class ImageProcessor(BaseProcessor):
         label_y_center = (label_item.y_min + label_item.y_max) / 2
         label_height = label_item.y_max - label_item.y_min
         y_threshold = label_height * 0.6  # 同行判定容差
+        y_threshold = label_height * 0.6
 
-        # Layer 1: 分方向收集候选框
-        right_candidates = []  # [(distance, score, item)]
-        below_candidates = []  # [(distance, score, item)]
+        right_candidates = [] # [(distance, score, item)]
+        below_candidates = [] # [(distance, score, item)]
 
         for j, item in enumerate(all_items):
-            if j == label_index:
-                continue
+            if j == label_index: continue
+            
+            # 如果候选框本身就是另一个关键字标签，则它是竞争对手而不是我们要找的 Value
+            if self._is_label(item.text): continue
+            
             item_y_center = (item.y_min + item.y_max) / 2
             score = self._score_as_account(item.text)
-
-            # 右侧：同行 + 在右边
-            if (abs(item_y_center - label_y_center) < y_threshold
+            
+            # 1. 检查右侧
+            if (abs(item_y_center - label_y_center) < y_threshold 
                     and item.x_min > label_item.x_max - 10):
                 dist = item.x_min - label_item.x_max
-                right_candidates.append((dist, score, item))
-
-            # 下方：x 有重叠 + 在下面
+                if dist < 250: # 距离限制
+                    right_candidates.append((dist, score, item))
+            
+            # 2. 检查下方
             else:
-                x_overlap = (min(item.x_max, label_item.x_max) -
+                x_overlap = (min(item.x_max, label_item.x_max) - 
                              max(item.x_min, label_item.x_min))
                 if x_overlap > 0 and item.y_min > label_item.y_min:
                     dist = item.y_min - label_item.y_max
-                    below_candidates.append((dist, score, item))
+                    if dist < 80: # 垂直距离限制
+                        below_candidates.append((dist, score, item))
 
-        # Layer 2 + 3: 按分数降序、距离升序排列，取最优
-        def best(candidates):
-            if not candidates:
-                return None
-            # score 越高越好，distance 越小越好
+        # 评分与决策逻辑：优先高分，其次近距离
+        def pick_best(candidates):
+            if not candidates: return None
+            # 按照分数降序(x[1])、距离升序(x[0])排列
             candidates.sort(key=lambda x: (-x[1], x[0]))
-            return candidates[0][2]
+            return candidates[0]
 
-        best_right = best(right_candidates)
-        best_below = best(below_candidates)
+        best_right = pick_best(right_candidates)
+        best_below = pick_best(below_candidates)
 
-        # 决策：右侧分数 >= 0.5 优先选右侧，否则选下方（如果下方分数更高）
-        best_candidate = None
-        if best_right is not None:
-            right_score = right_candidates[0][1] if right_candidates else 0
-            below_score = below_candidates[0][1] if below_candidates else 0
-            # 右侧有高置信度数字，或右侧比下方分更高/相当 → 选右侧
-            if right_score >= 0.5 or right_score >= below_score:
-                best_candidate = best_right
-            elif best_below is not None:
-                best_candidate = best_below
+        final_choice = None
+        if best_right:
+            # 如果右侧得分很高(>=0.5)，优先选右侧
+            if best_right[1] >= 0.5:
+                final_choice = best_right[2]
+            # 否则看下方有没有分更高的
+            elif best_below and best_below[1] > best_right[1]:
+                final_choice = best_below[2]
             else:
-                best_candidate = best_right
-        elif best_below is not None:
-            best_candidate = best_below
+                final_choice = best_right[2]
+        elif best_below:
+            final_choice = best_below[2]
 
-        if best_candidate is not None:
-            # 防御性校验
-            score = self._score_as_account(best_candidate.text)
-            # 1. 得分太低（纯文本）直接丢弃
-            if score < 0.3:
-                return []
-            # 2. 如果候选框自己就是个其他的系统 Label，丢弃
-            if self._is_label(best_candidate.text):
-                return []
-            return [best_candidate]
-
+        if final_choice and self._score_as_account(final_choice.text) >= 0.3:
+            return [final_choice]
         return []
 
     def _is_label(self, text: str) -> bool:
-        """检查文本本身是否是系统里配置的一个规则标签(Key)"""
+        """检查文本是否是系统预设的关键字标签"""
         import re
-        text_lower = text.strip().lower()
-        if not text_lower:
+        text_clean = text.strip()
+        if not text_clean:
             return False
-        for _, _, labels, _ in self.scanner.keywords:
+            
+        for _, _, labels, _, case_sens in self.scanner.keywords:
             for lbl in labels:
-                lbl_lower = lbl.strip().lower()
-                # 如果标签是纯英文，强制词边界，避免 Account 错误匹配到 Beneficiary Account
-                is_pure_english = bool(re.match(r'^[a-z0-9\s/.-]+$', lbl_lower))
-                if is_pure_english:
-                    pattern = r'(?<![a-z0-9])' + re.escape(lbl_lower) + r'(?![a-z0-9])'
-                    if re.search(pattern, text_lower) or text_lower in lbl_lower:
+                lbl_clean = lbl.strip()
+                if not lbl_clean: continue
+                
+                flags = 0 if case_sens else re.IGNORECASE
+                # 检查是否为纯英文/数字标签
+                is_pure_eng = bool(re.match(r'^[a-zA-Z0-9\s.-]+$', lbl_clean))
+                
+                if is_pure_eng:
+                    # 使用正则检测词边界，防止 CITIBANK 匹配到 IBAN 这样的片段
+                    pattern = re.compile(r'(?<![a-zA-Z0-9])' + re.escape(lbl_clean) + r'(?![a-zA-Z0-9])', flags)
+                    if pattern.search(text_clean):
                         return True
                 else:
-                    # 简单包含判断或被包含判断，防止长短标签相互覆盖
-                    if lbl_lower in text_lower or text_lower in lbl_lower:
-                        return True
+                    # 中文或混合字符匹配
+                    if case_sens:
+                        if lbl_clean in text_clean: return True
+                    else:
+                        if lbl_clean.lower() in text_clean.lower(): return True
         return False
 
     @staticmethod
