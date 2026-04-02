@@ -74,21 +74,17 @@ class Scanner:
                 })
 
         # 确定基础关键字规则
-        base_keywords = rules.get('keywords', [])
-
-        # 如果指定了银行，叠加该银行的私有额外规则
         if self.bank_id:
+            # 如果指定了银行，为了确保“所见即所得”，仅加载该银行的私有规则，不再混合全局规则
             bank_data = next(
                 (b for b in rules.get('banks', [])
                  if b['id'] == self.bank_id and b.get('enabled', True)),
                 None
             )
-            if bank_data:
-                disabled = set(bank_data.get('disabled_global_rules', []))
-                base_keywords = [k for k in base_keywords
-                                 if k['id'] not in disabled]
-                # 叠加银行私有规则
-                base_keywords += bank_data.get('extra_keywords', [])
+            base_keywords = bank_data.get('extra_keywords', []) if bank_data else []
+        else:
+            # 否则使用全局默认关键字
+            base_keywords = rules.get('keywords', [])
 
         # 编译正则模式
         # 移除 patterns 正则加载，现在全部统一在 account_whitelist 中处理
@@ -153,8 +149,11 @@ class Scanner:
             for label in labels:
                 is_pure_english = bool(re.match(r'^[A-Za-z0-9\s/.-]+$', label))
                 if is_pure_english:
+                    # 关键修复：将空格替换为可选的连字符、空格或下划线，以对 OCR 结果具备容错性
+                    # 例如 "Account Number" -> "Account[-\s/_]*Number"
+                    safe_label = re.escape(label).replace(r'\ ', r'[-\s/_]*')
                     # 前后均不得跟其他英文字母（即词边界保护）
-                    r_str = r'(?<![A-Za-z0-9])' + re.escape(label) + r'(?![A-Za-z0-9])[：:\s]*([^\s,，;；\n]+)'
+                    r_str = r'(?<![A-Za-z0-9])' + safe_label + r'(?![A-Za-z0-9])[：:\s]*([^\s,，;；\n]+)'
                 else:
                     r_str = re.escape(label) + r'[：:\s]*([^\s,，;；\n]+)'
 
@@ -197,9 +196,15 @@ class Scanner:
             if not key or not value:
                 continue
             key_clean = key.strip()
-            for rule_id, rule_name, labels, action in self.keywords:
+            for rule_id, rule_name, labels, action, case_sens in self.keywords:
                 for label in labels:
-                    if label in key_clean:
+                    match = False
+                    if case_sens:
+                        if label in key_clean: match = True
+                    else:
+                        if label.lower() in key_clean.lower(): match = True
+                    
+                    if match:
                         matches.append(KeywordScanMatch(
                             rule_id=rule_id,
                             rule_name=rule_name,
@@ -207,15 +212,27 @@ class Scanner:
                             value_text=value.strip(),
                         ))
                         break
-            # 同时对 value 做正则扫描
-            for rule_id, rule_name, pattern in self.patterns:
-                for m in pattern.finditer(value):
-                    matches.append(KeywordScanMatch(
-                        rule_id=rule_id,
-                        rule_name=rule_name,
-                        label=key_clean,
-                        value_text=m.group(),
-                    ))
+            # 同时对 value 做正则记录扫描
+            for acc in self.account_whitelist:
+                if acc['is_regex']:
+                    try:
+                        pattern = re.compile(acc['value'])
+                        for m in pattern.finditer(value):
+                            matches.append(KeywordScanMatch(
+                                rule_id='whitelist_regex',
+                                rule_name=f"账号规则({acc['note']})",
+                                label=key_clean,
+                                value_text=m.group(),
+                            ))
+                    except re.error: pass
+                else:
+                    if acc['value'] in value:
+                        matches.append(KeywordScanMatch(
+                            rule_id='whitelist_exact',
+                            rule_name=f"账号规则({acc['note']})",
+                            label=key_clean,
+                            value_text=acc['value'],
+                        ))
         return matches
 
     def redact_text(self, text: str, matches: list[ScanMatch] = None) -> str:
