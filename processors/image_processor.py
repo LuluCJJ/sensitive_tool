@@ -119,23 +119,31 @@ class ImageProcessor(BaseProcessor):
                     # --- 新增：同文字框自检逻辑 ---
                     # 即使 Label 和 Value 被合在同一个 OCR 框内（如 "IBAN:666"），也能正确识别
                     inner_matches = self.scanner.scan_text(text)
-                    # 过滤掉标签自身，寻找到具体的脱敏值
-                    val_matches = inner_matches
-                    
-                    if val_matches:
-                        # 这种情况直接遮盖整个文字框（简单且安全）
-                        mask_regions.append((
-                            ocr_item.x_min, ocr_item.y_min,
-                            ocr_item.x_max, ocr_item.y_max
-                        ))
-                        for m in val_matches:
-                            self._add_log_entry(
-                                log, rule_id, rule_name,
-                                m.matched_text,
-                                f'{location_prefix} 标签"{matched_label}"框内值',
-                                'keyword_inner',
-                                f'同文字框内置关联: {matched_label}'
-                            )
+                    # 关键修复：不再遮盖整个文字框，而是通过比例计算只遮盖具体的值
+                    for m in inner_matches:
+                        # 质量校验：如果检测到的“值”评分过低（如 IBAN Number 中的 Number），则跳过
+                        if self._score_as_account(m.matched_text) >= 0.3:
+                            total_len = len(text)
+                            if total_len > 0:
+                                W = ocr_item.x_max - ocr_item.x_min
+                                # 计算比例坐标：将文字框宽度 W 按字符索引平分
+                                # target_x_min = x_min + (start_idx / total_len) * W
+                                # target_x_max = x_min + (end_idx / total_len) * W
+                                sub_x_min = int(ocr_item.x_min + (m.start / total_len) * W)
+                                sub_x_max = int(ocr_item.x_min + (m.end / total_len) * W)
+                                
+                                mask_regions.append((
+                                    sub_x_min, ocr_item.y_min,
+                                    sub_x_max, ocr_item.y_max
+                                ))
+                                
+                                self._add_log_entry(
+                                    log, rule_id, rule_name,
+                                    m.matched_text,
+                                    f'{location_prefix} 标签"{matched_label}"框内值',
+                                    'keyword_inner',
+                                    f'同文字框内精准匹配: {matched_label}'
+                                )
                     else:
                         # --- 原有：寻找外部邻近值逻辑 ---
                         # 在原始 OCR 结果中查找邻近值（因合并后的结果可能跨度过大不便定位）

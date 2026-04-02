@@ -10,7 +10,7 @@ def build():
 
     args = [
         'main.py',
-        '--name=银行水单脱敏工具_v1.3',
+        '--name=银行水单脱敏工具_v1.4',
         '--windowed',
         '--onefile',
         '--clean',
