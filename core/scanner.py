@@ -157,7 +157,9 @@ class Scanner:
                 else:
                     r_str = re.escape(label) + r'[：:\s]*([^\s,，;；\n]+)'
 
-                label_pattern = re.compile(r_str, re.UNICODE | re.IGNORECASE)
+                # 修复：根据 case_sens 决定是否忽略大小写
+                flags = re.UNICODE if case_sens else (re.UNICODE | re.IGNORECASE)
+                label_pattern = re.compile(r_str, flags)
                 for m in label_pattern.finditer(text):
                     value = m.group(1)
                     if value and value != self.replacement:

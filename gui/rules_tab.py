@@ -281,7 +281,8 @@ class RulesTab(ttk.Frame):
         ttk.Label(frame, text='多个标签用逗号分隔', font=('', 8), foreground='gray').grid(row=3, column=1, sticky=W)
         
         case_sens_var = tk.BooleanVar(value=(values[3] == '✓') if values else False)
-        ttk.Checkbutton(frame, text=t('col_case_sensitive'), variable=case_sens_var).grid(row=4, column=1, sticky=W, pady=5)
+        ttk.Checkbutton(frame, text=t('col_case_sensitive'), variable=case_sens_var).grid(row=4, column=1, sticky=W, pady=(5, 0))
+        ttk.Label(frame, text='选中：须完全一致；不选：忽略大小写（推荐）', font=('', 8), foreground='gray').grid(row=5, column=1, sticky=W, pady=(0, 5))
 
         frame.columnconfigure(1, weight=1)
 
@@ -301,7 +302,7 @@ class RulesTab(ttk.Frame):
             dialog.destroy()
 
         ttk.Button(frame, text=t('btn_ok'), style='success.TButton',
-                   command=save).grid(row=5, column=1, sticky=E, pady=(10, 0))
+                   command=save).grid(row=6, column=1, sticky=E, pady=(10, 0))
 
     def _delete_keyword(self):
         selected = self.keyword_tree.selection()
